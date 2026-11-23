@@ -28,15 +28,15 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
     <header class="container case-hero">
       <a class="back-link" href="/#work"><span aria-hidden="true">←</span> {ui.actions.backToWork}</a>
       <div class="case-kicker">
-        <span>CASE STUDY / 0{project.data.order}</span>
+        <span>{ui.case.studyLabel} / 0{project.data.order}</span>
         <span>{project.data.status}</span>
       </div>
       <h1>{project.data.title}</h1>
       <p>{project.data.tagline}</p>
       <dl class="case-meta">
-        <div><dt>PERIOD</dt><dd>{project.data.period}</dd></div>
-        <div><dt>ROLE</dt><dd>{project.data.role}</dd></div>
-        <div><dt>DOMAIN</dt><dd>{project.data.domain}</dd></div>
+        <div><dt>{ui.case.period}</dt><dd>{project.data.period}</dd></div>
+        <div><dt>{ui.case.role}</dt><dd>{project.data.role}</dd></div>
+        <div><dt>{ui.case.domain}</dt><dd>{project.data.domain}</dd></div>
       </dl>
     </header>
 

@@ -7,7 +7,7 @@ import { principles, sections, skillGroups, targetRoles, ui } from '../data/site
   <SectionHeading id="about" {...sections.about} />
 
   <p class="about-statement reveal">
-    {ui.about.statementBefore}<br />而是<span>{ui.about.statementAccent}</span>{ui.about.statementAfter}
+    {ui.about.statementBefore}<br />{ui.about.statementBridge}<span>{ui.about.statementAccent}</span>{ui.about.statementAfter}
   </p>
 
   <div class="principles">
@@ -78,7 +78,7 @@ import { principles, sections, skillGroups, targetRoles, ui } from '../data/site
   }
 
   .principle:hover {
-    border-color: rgb(183 247 42 / 28%);
+    border-color: var(--accent-border);
     transform: translateY(-3px);
   }
 

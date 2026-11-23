@@ -52,14 +52,14 @@ const points = [
     overflow: hidden;
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-lg);
-    background: #12171a;
+    background: var(--visual-live);
     color: var(--text-primary);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
+    box-shadow: var(--inset-highlight);
   }
 
-  .project-visual--anonymous { background: #161713; }
-  .project-visual--delivery { background: #12161b; }
-  .project-visual--social { background: #171512; }
+  .project-visual--anonymous { background: var(--visual-anonymous); }
+  .project-visual--delivery { background: var(--visual-delivery); }
+  .project-visual--social { background: var(--visual-social); }
 
   .visual-meta,
   .visual-foot {
@@ -111,7 +111,7 @@ const points = [
 
   .node rect {
     fill: var(--surface-2);
-    stroke: rgb(255 255 255 / 14%);
+    stroke: var(--visual-node-border);
   }
 
   .node circle {

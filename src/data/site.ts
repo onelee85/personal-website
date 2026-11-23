@@ -221,6 +221,7 @@ export const ui = {
   nav: {
     menu: 'Menu',
     close: 'Close',
+    locationCode: 'SHANGHAI',
   },
   labels: {
     pending: '待确认',
@@ -250,6 +251,7 @@ export const ui = {
   },
   about: {
     statementBefore: '我关注的不只是架构图，',
+    statementBridge: '而是',
     statementAccent: '业务、系统与团队',
     statementAfter: '能否一起持续交付。',
     skillsEyebrow: 'Tools are not the story',
@@ -265,6 +267,7 @@ export const ui = {
     flow: 'INPUT → DECISION → FEEDBACK',
   },
   case: {
+    studyLabel: 'CASE STUDY',
     period: 'PERIOD',
     role: 'ROLE',
     domain: 'DOMAIN',

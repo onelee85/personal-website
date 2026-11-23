@@ -1,5 +1,5 @@
 ---
-import { contact, identity } from '../data/site';
+import { contact, identity, ui } from '../data/site';
 const marquee = contact.marquee;
 ---
 
@@ -34,7 +34,7 @@ const marquee = contact.marquee;
 
   <div class="contact-meta">
     <span>{identity.roleZh}</span>
-    <span>Based in {identity.basedIn}</span>
+    <span>{ui.hero.basedInLabel} {identity.basedIn}</span>
   </div>
 </section>
 

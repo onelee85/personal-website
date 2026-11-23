@@ -167,7 +167,7 @@ ol[role='list'] {
 
 .btn:hover {
   transform: translateY(-2px);
-  background: #c4ff3d;
+  background: var(--accent-hover);
 }
 
 .btn--ghost {

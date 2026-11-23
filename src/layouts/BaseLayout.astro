@@ -8,11 +8,13 @@ import '@fontsource/noto-serif-sc/700.css';
 import '@fontsource/noto-serif-sc/900.css';
 
 import '../styles/tokens.css';
+import '../styles/themes/index.css';
 import '../styles/global.css';
 import '../styles/motion.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { identity, ui } from '../data/site';
+import { activeTheme } from '../config/theme';
 
 interface Props {
   title?: string;
@@ -33,11 +35,11 @@ const canonical = new URL(Astro.url.pathname, Astro.url);
 ---
 
 <!doctype html>
-<html lang="zh-CN" class="no-js">
+<html lang="zh-CN" class="no-js" data-theme={activeTheme.id}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101318" />
+    <meta name="theme-color" content={activeTheme.browserColor} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={canonical} />
     <title>{pageTitle}</title>

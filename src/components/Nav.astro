@@ -14,7 +14,7 @@ const prefix = Astro.url.pathname === '/' ? '' : '/';
       <nav class="nav-links" aria-label={ui.a11y.primaryNav}>
         {nav.map((item) => <a href={`${prefix}${item.href}`} class="nav-link glare-hover">{item.label}</a>)}
       </nav>
-      <span class="nav-status"><i aria-hidden="true"></i>SHANGHAI</span>
+      <span class="nav-status"><i aria-hidden="true"></i>{ui.nav.locationCode}</span>
       <button
         class="nav-toggle"
         type="button"
@@ -51,7 +51,7 @@ const prefix = Astro.url.pathname === '/' ? '' : '/';
 
   .site-nav.is-scrolled {
     border-bottom-color: var(--line-subtle);
-    background: rgb(16 19 24 / 88%);
+    background: var(--nav-bg);
     backdrop-filter: blur(12px);
   }
 

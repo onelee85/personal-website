@@ -6,7 +6,7 @@
 
 仓库：<https://github.com/onelee85/personal-website>
 
-**Astro 5 · TypeScript · Static Output · 原生 CSS · 零运行时框架**
+**Astro 5 · TypeScript · Static Output · 原生 CSS · 可切换主题 · 零运行时框架**
 
 ---
 
@@ -43,7 +43,7 @@
 - **内容集合（Content Layer）**：`src/content.config.ts` 用 Zod 定义项目 frontmatter schema，类型安全且构建时校验。
 - **单一内容来源**：`src/data/site.ts` 统一维护身份信息、导航、经历、技能、文案与 SEO 描述。
 - **字体本地化**：通过 `@fontsource` 打包 Archivo Variable、JetBrains Mono Variable、Noto Sans SC、Noto Serif SC，不依赖 CDN。
-- **设计令牌**：颜色、字号、间距、动效统一收敛在 CSS 变量中，便于整体换肤。
+- **可切换主题**：颜色、字体、圆角、动效令牌按 `[data-theme]` 分组存放在 `src/styles/themes/`，在 `src/config/theme.ts` 一处切换；与主题无关的结构令牌留在 `tokens.css`，组件内不写死颜色。
 - **可访问性与降级**：跳转主内容链接、语义化标签与 `aria-*`、`prefers-reduced-motion` 支持、无 JS 环境内容仍可见。
 - **轻量交互**：滚动显现（IntersectionObserver）、指针光晕、项目预览切换均为原生 JS，无第三方运行时。
 
@@ -54,7 +54,7 @@
 | 框架 | Astro `^5.4.2`（静态输出） |
 | 语言 | TypeScript（继承 `astro/tsconfigs/strict`） |
 | 内容 | Astro Content Layer + `glob` loader + Zod schema（Markdown） |
-| 样式 | 原生 CSS、CSS 自定义属性、组件内 `<style>` 作用域隔离 |
+| 样式 | 原生 CSS、CSS 自定义属性、组件内 `<style>` 作用域隔离、可切换主题（`src/config/theme.ts`） |
 | 字体 | `@fontsource-variable/archivo`、`jetbrains-mono`、`@fontsource/noto-sans-sc`、`noto-serif-sc` |
 | 工具 | `@astrojs/check`（类型检查）、npm |
 | 部署 | 任意静态托管（GitHub Pages / Vercel / Netlify / Cloudflare Pages 等） |
@@ -103,16 +103,20 @@ npm run dev            # 启动开发服务器：http://127.0.0.1:4321
     │   ├── anonymous-live.md
     │   ├── engineering-system.md
     │   └── social-product.md
+    ├── config/theme.ts           # 当前启用的主题 id 与浏览器主题色
     ├── data/site.ts              # 全站文案与数据的单一来源
     ├── layouts/
-    │   └── BaseLayout.astro      # HTML 骨架、meta/SEO、字体、全局样式、导航与页脚
+    │   └── BaseLayout.astro      # HTML 骨架、meta/SEO、字体、主题与全局样式、导航与页脚
     ├── components/               # Hero、能力板、项目展示、经历、关于、联系等区块
     ├── pages/
     │   ├── index.astro           # 首页
     │   ├── work/[...slug].astro  # 案例详情页（由内容集合静态生成）
     │   └── 404.astro             # 404 页
     └── styles/
-        ├── tokens.css            # 设计令牌（颜色 / 字体 / 间距 / 层级）
+        ├── tokens.css            # 与主题无关的结构令牌（间距 / 容器宽度 / 阅读宽度）
+        ├── themes/               # 可切换的视觉主题
+        │   ├── index.css         # 主题入口，统一 @import 各主题
+        │   └── editorial-dark.css  # 默认深色主题的全部视觉令牌
         ├── global.css            # 基础样式与通用组件类
         └── motion.css            # 动效、显现动画与 reduced-motion 降级
 ```
@@ -121,7 +125,7 @@ npm run dev            # 启动开发服务器：http://127.0.0.1:4321
 
 ### 修改全站文案
 
-编辑 `src/data/site.ts`。其中 `identity`、`hero`、`nav`、`capabilities`、`experience`、`principles`、`skillGroups`、`targetRoles`、`contact`、`seo`、`sections`、`ui`、`projectVisuals` 均为带 `as const` 的常量对象，改动后类型检查会覆盖引用处。
+编辑 `src/data/site.ts`。其中 `identity`、`hero`、`nav`、`capabilities`、`experience`、`principles`、`skillGroups`、`targetRoles`、`contact`、`seo`、`sections`、`ui`、`projectVisuals` 均为带 `as const` 的常量对象，改动后类型检查会覆盖引用处。界面上的固定短文案（如导航的 `Menu` / `Close`、地点代码、案例标签）也统一放在 `ui` 中，组件里不直接写死中文或英文文案。
 
 ### 新增一个项目案例
 
@@ -172,7 +176,30 @@ decisions: []
 
 ## 样式与交互
 
-- **设计令牌**：`src/styles/tokens.css` 定义 `--surface-*`、`--text-*`、`--accent`、`--line-*`、`--font-*`、`--fs-*` 等变量，深色主题为主要视觉基调。
+### 主题系统
+
+主题通过 `<html data-theme="...">` 生效，视觉变量按主题分组，组件只引用 `var(--...)`，因此换主题不需要改动组件代码。
+
+| 文件 | 职责 |
+| --- | --- |
+| `src/config/theme.ts` | `activeTheme.id`（当前主题）与 `activeTheme.browserColor`（`<meta name="theme-color">`） |
+| `src/styles/themes/index.css` | 主题入口，统一 `@import` 各主题文件 |
+| `src/styles/themes/editorial-dark.css` | 默认深色主题，在 `[data-theme='editorial-dark']` 下定义颜色、字体、圆角、阴影、渐变与动效等全部视觉令牌 |
+| `src/styles/tokens.css` | 与主题无关的结构令牌：间距、最大宽度、内容边距、阅读宽度 |
+
+`BaseLayout.astro` 引入 `themes/index.css`，并把 `activeTheme.id` 写到 `<html data-theme>`、把 `browserColor` 写到 meta 标签。当前内置主题为 `editorial-dark`。
+
+新增一个主题：
+
+1. 复制 `editorial-dark.css` 为 `your-theme.css`，把选择器改为 `[data-theme='your-theme']`，调整变量值但**保持变量名一致**。
+2. 在 `src/styles/themes/index.css` 添加 `@import './your-theme.css';`。
+3. 将 `src/config/theme.ts` 的 `id` 改为 `'your-theme'`，同步更新 `browserColor`。
+4. 运行 `npm run build` 检查构建与视觉效果。
+
+> 组件与 `global.css` / `motion.css` 中不应出现硬编码颜色或渐变，统一走主题变量，否则切换主题时会残留旧配色。
+
+### 样式与交互细则
+
 - **全局样式**：`src/styles/global.css` 负责 reset、排版、按钮、容器、标签等通用类；组件专属样式写在各 `.astro` 文件的 `<style>` 中，由 Astro 自动作用域隔离。
 - **动效**：`src/styles/motion.css` 与 `BaseLayout.astro` 中的脚本实现滚动显现、指针环境光和标题入场动画；`prefers-reduced-motion: reduce` 下关闭动画。
 - **无 JS 降级**：`<html>` 默认带 `no-js` 类，脚本执行后替换为 `js`；未启用 JS 时正文内容仍完整可见。
@@ -228,6 +255,7 @@ export default defineConfig({
 - 联系方式（邮箱、GitHub 等）目前为占位状态，见 `src/data/site.ts` 的 `contact`。
 - 近期任职的正式职称与全职 / 服务合作分段待确认。
 - 部分历史项目的指标定义、统计周期与监控来源待补证。
+- 主题系统目前只内置 `editorial-dark` 一个配色，其他主题可按「新增主题」步骤扩展。
 - 部署上线后补充 `site` / `base` 配置与公开访问地址。
 
 ## 版权

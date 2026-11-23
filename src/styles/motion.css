@@ -16,7 +16,7 @@
   z-index: 30;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(520px circle at var(--cursor-x, 50vw) var(--cursor-y, 50vh), rgb(183 247 42 / 6%), transparent 70%);
+  background: var(--ambient-glow);
   mix-blend-mode: screen;
   transition: opacity var(--dur-hover) var(--ease-out);
 }
@@ -40,7 +40,7 @@
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(260px circle at var(--hover-x) var(--hover-y), rgb(183 247 42 / 10%), transparent 72%);
+  background: var(--hover-glow);
   transition: opacity var(--dur-hover) var(--ease-out);
 }
 
