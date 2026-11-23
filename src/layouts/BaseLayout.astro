@@ -20,12 +20,14 @@ interface Props {
   title?: string;
   description?: string;
   showNav?: boolean;
+  pageTheme?: { id: string; browserColor: string };
 }
 
 const {
   title,
   description = identity.roleZh,
   showNav = true,
+  pageTheme,
 } = Astro.props;
 
 const pageTitle = title
@@ -35,11 +37,11 @@ const canonical = new URL(Astro.url.pathname, Astro.url);
 ---
 
 <!doctype html>
-<html lang="zh-CN" class="no-js" data-theme={activeTheme.id}>
+<html lang="zh-CN" class="no-js" data-theme={activeTheme.id} data-page-theme={pageTheme?.id}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content={activeTheme.browserColor} />
+    <meta name="theme-color" content={pageTheme?.browserColor ?? activeTheme.browserColor} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={canonical} />
     <title>{pageTitle}</title>
@@ -58,6 +60,7 @@ const canonical = new URL(Astro.url.pathname, Astro.url);
     <div class="cursor-ambient" aria-hidden="true"></div>
     <a href="#main" class="skip-link">{ui.a11y.skipToContent}</a>
     {showNav && <Nav />}
+    <slot name="navigation" />
     <main id="main">
       <slot />
     </main>

@@ -3,6 +3,7 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { getFeaturedProjects } from '../../lib/projects';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
+import LiveRoadmap from '../../components/roadmap/LiveRoadmap.astro';
 import { ui } from '../../data/site';
 
 interface Props {
@@ -24,6 +25,11 @@ const currentIndex = projects.findIndex((item) => item.id === project.id);
 const nextProject = projects[(currentIndex + 1) % projects.length];
 ---
 
+{project.data.roadmap ? (
+  <LiveRoadmap project={project.data} roadmap={project.data.roadmap} nextProject={nextProject}>
+    <Content />
+  </LiveRoadmap>
+) : (
 <BaseLayout title={project.data.title} description={project.data.summary}>
   <article class="case-page">
     <header class="container case-hero">
@@ -107,6 +113,7 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
     </nav>
   </article>
 </BaseLayout>
+)}
 
 <style>
   .case-hero {

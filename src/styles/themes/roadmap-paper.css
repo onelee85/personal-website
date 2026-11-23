@@ -1,0 +1,31 @@
+[data-page-theme='roadmap-paper'] {
+  color-scheme: light;
+  --canvas: #edf0f1;
+  --surface-1: #fff;
+  --surface-2: #e2e7e9;
+  --text-primary: #111a1e;
+  --text-secondary: #4d5c63;
+  --text-tertiary: #5d6c73;
+  --line-subtle: rgb(23 40 47 / 13%);
+  --line-strong: rgb(23 40 47 / 27%);
+  --accent: #ad3e15;
+  --on-accent: #fff;
+  --nav-bg: rgb(237 240 241 / 96%);
+  --card-shadow: 0 12px 30px -24px rgb(20 38 48 / 42%);
+  --plate-top: #f8fafa;
+  --plate-front: #dce3e5;
+  --plate-side: #bfcccf;
+  --plate-edge: #9aa8ad;
+  --plate-shadow: rgb(36 56 63 / 17%);
+  --dot-color: rgb(45 65 75 / 17%);
+  --content-max: 1280px;
+  --content-pad: clamp(20px, 3.6vw, 48px);
+  --bar-height: 64px;
+  scroll-padding-top: var(--bar-height);
+}
+
+[data-page-theme='roadmap-paper'] .cursor-ambient { display: none; }
+
+@media (max-width: 639px) {
+  [data-page-theme='roadmap-paper'] { --bar-height: 56px; }
+}

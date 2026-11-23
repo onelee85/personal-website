@@ -1,0 +1,100 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+type Layers = NonNullable<CollectionEntry<'projects'>['data']['roadmap']>['layers'];
+interface Props {
+  layers: Layers;
+  selectable?: boolean;
+}
+
+const { layers, selectable = false } = Astro.props;
+---
+
+<div class="system-stack" data-choices={selectable || undefined} aria-label="选择系统分层">
+  {layers.map((layer, index) => (
+    <a
+      class="plate"
+      href={`#layer-${index + 1}`}
+      id={selectable ? `select-layer-${index + 1}` : undefined}
+      data-select={selectable || undefined}
+      aria-label={`S${index + 1} ${layer.title}`}
+      style={`--order:${layers.length - index}`}
+    >
+      <svg viewBox="0 0 536 204" aria-hidden="true" focusable="false">
+        <g class="slab">
+          <path class="shadow" d="M137 97 286 27 517 126 367 197Z" />
+          <path class="left-face" d="M136 83 366 182v14L136 97Z" />
+          <path class="right-face" d="m366 182 150-71v14l-150 71Z" />
+          <path class="surface" d="M286 12 516 111 366 182 136 83Z" />
+          <g class="traces" transform="matrix(1 .43 -1 .47 286 12)">
+            <path d="M18 24h50v18h43 M18 32h42v18h44 M18 40h34v18h45 M114 22h72v23" />
+            <circle cx="18" cy="24" r="2.2" /><circle cx="18" cy="32" r="2.2" /><circle cx="18" cy="40" r="2.2" />
+          </g>
+          <text class="engraving" transform="translate(160 80) skewY(23.3)">
+            <tspan class="plate-code">S{index + 1}</tspan><tspan dx="8">{layer.english}</tspan>
+          </text>
+          {layer.components.map((_, i) => (
+            <g transform={`translate(${336 + 30 * i} ${78 + 12.9 * i})`}>
+              <path class="chip-left" d="M-13 0 0 6v7l-13-6Z" />
+              <path class="chip-right" d="m0 6 13-6v7L0 13Z" />
+              <path class="chip-top" d="M0-6 13 0 0 6-13 0Z" />
+              <ellipse class="pin" cx="0" cy="0" rx="2.2" ry="1.4" />
+            </g>
+          ))}
+          <path class="leader" d="M105 83h31" />
+          <circle class="pin" cx="136" cy="83" r="2.4" />
+          <text class="layer-name" x="98" y="88" text-anchor="end">{layer.title}</text>
+        </g>
+      </svg>
+    </a>
+  ))}
+</div>
+
+<style>
+  .system-stack { width: 100%; }
+  .plate {
+    position: relative;
+    z-index: var(--order);
+    display: block;
+    width: 100%;
+    aspect-ratio: 536 / 108;
+    pointer-events: none;
+  }
+  .plate:last-child { aspect-ratio: 536 / 204; }
+  .plate svg { position: absolute; inset: 0 0 auto; width: 100%; overflow: visible; }
+  .slab {
+    pointer-events: visiblePainted;
+    transition: transform var(--dur-hover) var(--ease-out);
+  }
+  .slab path, .slab circle { stroke-linejoin: round; }
+  .surface, .left-face, .right-face, .chip-left, .chip-right, .chip-top {
+    stroke: var(--plate-edge);
+    stroke-width: .8px;
+  }
+  .surface { fill: var(--plate-top); }
+  .left-face, .chip-left { fill: var(--plate-front); }
+  .right-face, .chip-right { fill: var(--plate-side); }
+  .chip-top { fill: var(--surface-1); }
+  .shadow { fill: var(--plate-shadow); filter: blur(4px); }
+  .traces { fill: none; stroke: var(--plate-edge); stroke-width: .9; }
+  .traces circle { fill: var(--plate-top); }
+  .engraving {
+    fill: var(--text-secondary);
+    font: 9px var(--font-mono);
+    letter-spacing: 1.1px;
+  }
+  .plate-code { fill: var(--text-primary); font-size: 13px; font-weight: 650; }
+  .leader { stroke: var(--plate-edge); stroke-width: 1px; }
+  .pin { fill: var(--accent); }
+  .layer-name { fill: var(--text-secondary); font: 500 15px var(--font-body); }
+  .plate:is(:hover, :focus-visible, [aria-selected='true']) .slab { transform: translateY(-4px); }
+  .plate:is(:hover, :focus-visible, [aria-selected='true']) .surface { fill: var(--surface-1); stroke: var(--accent); }
+  .plate:is(:hover, :focus-visible, [aria-selected='true']) :is(.plate-code, .layer-name) { fill: var(--accent); }
+  .plate:focus-visible { outline: none; }
+  .plate:focus-visible .surface { stroke-width: 3px; }
+  @media (max-width: 639px) {
+    .layer-name { font-size: 18px; }
+    .engraving tspan + tspan { display: none; }
+    .plate-code { font-size: 17px; }
+  }
+</style>

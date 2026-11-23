@@ -294,3 +294,24 @@ export const projectVisuals = {
   delivery: { code: 'TEAM / FLOW', center: 'SHIP', nodes: ['PLAN', 'CODE', 'REVIEW', 'TEST', 'BUILD', 'DEPLOY'] },
   social: { code: 'PRODUCT / LOOP', center: 'USER', nodes: ['IDEA', 'DESIGN', 'BUILD', 'LAUNCH', 'GROW', 'LEARN'] },
 } as const;
+
+export const liveRoadmapChapters = [
+  {
+    id: 'systems', label: '系统分层', english: 'SYSTEM LAYERS', prefix: 'S',
+    question: '一个直播间要用到哪些系统？',
+    heading: '直播间背后的四层系统',
+    intro: '选一层，查看它承担的工作、请求去向和使用的组件。',
+  },
+  {
+    id: 'flows', label: '关键链路', english: 'REQUEST PATHS', prefix: 'P',
+    question: '进房、弹幕和送礼分别走哪条路？',
+    heading: '沿着观众的三次操作，看请求去向',
+    intro: '从客户端发起操作，到观众看到结果，逐步看系统怎样处理。',
+  },
+  {
+    id: 'evolution', label: '架构演进', english: 'PLATFORM EVOLUTION', prefix: 'T',
+    question: '这些能力是在什么时候建起来的？',
+    heading: '从首次上线到平台成熟',
+    intro: '按三个时期回看架构。图中每个点代表一年，着色的点对应这一阶段。',
+  },
+] as const;

@@ -1,0 +1,484 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { roadmapPaper } from '../../config/theme';
+import { identity, liveRoadmapChapters, ui } from '../../data/site';
+import SystemStack from './SystemStack.astro';
+
+type Project = CollectionEntry<'projects'>;
+interface Props {
+  project: Project['data'];
+  roadmap: NonNullable<Project['data']['roadmap']>;
+  nextProject: Project;
+}
+
+const { project, roadmap, nextProject } = Astro.props;
+const { layers, flows, eras } = roadmap;
+const counts = [layers.length, flows.length, eras.length];
+const chapters = liveRoadmapChapters.map((chapter, i) => ({
+  ...chapter, range: `${chapter.prefix}1—${chapter.prefix}${counts[i]}`,
+}));
+const [system, flow, evolution] = chapters;
+const firstYear = eras[0].firstYear;
+const years = Array.from({ length: eras[eras.length - 1].lastYear - firstYear + 1 }, (_, i) => firstYear + i);
+---
+
+<BaseLayout title={project.title} description={project.summary} pageTheme={roadmapPaper} showNav={false}>
+  <header slot="navigation" class="roadmap-bar" data-roadmap-bar>
+    <div class="container bar-inner">
+      <a class="byline" href="/#work" aria-label={`${identity.name} · ${ui.actions.backToWork}`}>
+        <span aria-hidden="true">←</span> {identity.name} <small>项目集</small>
+      </a>
+      <nav aria-label="案例章节">
+        {chapters.map((chapter) => (
+          <a href={`#${chapter.id}`}><b>{chapter.range}</b><span>{chapter.label}</span></a>
+        ))}
+      </nav>
+      <span class="bar-title">{project.title} · 架构图谱</span>
+    </div>
+    <div class="reading-progress" aria-hidden="true"></div>
+  </header>
+
+  <article class="roadmap">
+    <header class="cover">
+      <div class="container cover-grid">
+        <div class="cover-lead">
+          <p class="notation">LIVE PLATFORM <span>/</span> <span>{project.period}</span></p>
+          <h1>
+            {roadmap.headline.map((line, i) => <span class:list={[{ ink: i === 2 }]}>{line}</span>)}
+          </h1>
+          <p class="cover-summary">{project.summary}</p>
+        </div>
+        <figure class="cover-figure">
+          <SystemStack layers={layers} />
+          <figcaption><span>{roadmap.figureCaption}</span><a href="#systems">查看分层 ↓</a></figcaption>
+        </figure>
+        <ol class="contents" role="list" aria-label="按问题阅读案例">
+          {chapters.map((chapter, i) => (
+            <li><a href={`#${chapter.id}`}>
+              <span class="index">{String(i + 1).padStart(2, '0')}</span>
+              <strong>{chapter.question}</strong>
+              <small>{chapter.range}</small><span aria-hidden="true">→</span>
+            </a></li>
+          ))}
+        </ol>
+      </div>
+    </header>
+
+    <section class="chapter container" id={system.id} aria-labelledby="systems-title">
+      <p class="notation">{system.english} <span>/</span> {system.range}</p>
+      <h2 id="systems-title">{system.heading}</h2>
+      <p class="chapter-lead">{system.intro}</p>
+      <div class="system-layout" data-explorer data-orientation="vertical">
+        <div class="stack-column">
+          <p class="notation">SYSTEM STACK <span>/</span> <span>选择一层</span></p>
+          <SystemStack layers={layers} selectable />
+        </div>
+        <div class="layer-panels">
+          {layers.map((layer, i) => {
+            const id = `layer-${i + 1}`;
+            return (
+              <section class="layer-panel" id={id}>
+                <p class="notation">LAYER {String(i + 1).padStart(2, '0')} <span>/</span> {layer.english}</p>
+                <h3><small>S{i + 1}</small>{layer.title}</h3>
+                <p class="panel-lead">{layer.summary}</p>
+                <div data-explorer>
+                  <div class="mode-links" data-choices aria-label={`${layer.title}的内容`}>
+                    <a data-select id={`select-${id}-path`} href={`#${id}-path`}>链路说明</a>
+                    <a data-select id={`select-${id}-parts`} href={`#${id}-parts`}>组件 <small>{layer.components.length}</small></a>
+                  </div>
+                  <div id={`${id}-path`} class="path-note">
+                    <span>请求去向</span><p>{layer.path}</p>
+                  </div>
+                  <div id={`${id}-parts`}>
+                    <dl class="parts">
+                      {layer.components.map((part) => <div><dt>{part.label}</dt><dd>{part.detail}</dd></div>)}
+                    </dl>
+                  </div>
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter container" id={flow.id} aria-labelledby="flows-title">
+      <p class="notation">{flow.english} <span>/</span> {flow.range}</p>
+      <h2 id="flows-title">{flow.heading}</h2>
+      <p class="chapter-lead">{flow.intro}</p>
+      <div data-explorer>
+        <div class="flow-rail" data-choices aria-label="选择观众操作">
+          {flows.map((item, i) => (
+            <a data-select id={`select-flow-${i + 1}`} href={`#flow-${i + 1}`}>
+              <span>{item.label}</span><b>P{i + 1}</b>
+            </a>
+          ))}
+        </div>
+        {flows.map((item, i) => (
+          <section class="flow-card" id={`flow-${i + 1}`}>
+            <div>
+              <p class="notation">P{i + 1} <span>/</span> <span>{item.label}</span></p>
+              <h3>{item.title}</h3><p class="panel-lead">{item.summary}</p>
+            </div>
+            <ol class="steps" role="list" aria-label={`${item.label}的处理步骤`}>
+              {item.steps.map((step, n) => (
+                <li><span class="index">{String(n + 1).padStart(2, '0')}</span>
+                  <div><strong>{step.label}</strong><p>{step.detail}</p></div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+    </section>
+
+    <section class="chapter container" id={evolution.id} aria-labelledby="evolution-title">
+      <p class="notation">{evolution.english} <span>/</span> {evolution.range}</p>
+      <h2 id="evolution-title">{evolution.heading}</h2>
+      <p class="chapter-lead">{evolution.intro}</p>
+      <div data-explorer>
+        <div class="era-choices" data-choices aria-label="选择架构时期">
+          {eras.map((era, i) => (
+            <a data-select id={`select-era-${i + 1}`} href={`#era-${i + 1}`}>
+              <span class="index">T{i + 1}</span><strong>{era.label}</strong>
+              <span class="years" aria-hidden="true">
+                {years.map((year) => <i class:list={[{ filled: year >= era.firstYear && year <= era.lastYear }]}></i>)}
+              </span>
+              <small>{era.firstYear}{era.firstYear !== era.lastYear && ` — ${era.lastYear}`}</small>
+            </a>
+          ))}
+        </div>
+        {eras.map((era, i) => (
+          <section class="era-detail" id={`era-${i + 1}`}>
+            <p class="notation">T{i + 1} <span>/</span> <span>{era.label}</span></p>
+            <div><h3>{era.title}</h3><p>{era.detail}</p></div>
+          </section>
+        ))}
+      </div>
+      <div class="evidence">
+        <div>
+          <p class="notation">PROJECT SCOPE <span>/</span> <span>{project.role}</span></p>
+          <dl class="scope-facts">
+            {project.facts.map((fact) => (
+              <div><dt>{fact.label}</dt><dd><strong>{fact.value}</strong><p>{fact.note}</p></dd></div>
+            ))}
+          </dl>
+        </div>
+        <div class="evidence-prose"><slot /></div>
+      </div>
+    </section>
+    <nav class="container case-exit" aria-label={ui.a11y.caseNavigation}>
+      <a href="/#work">← {ui.actions.allProjects}</a>
+      <a href={`/work/${nextProject.id}/`}><small>下一个案例</small> {nextProject.data.title} ↗</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<script>
+  import './interactions';
+</script>
+
+<style>
+  .roadmap-bar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--line-subtle);
+  }
+  .bar-inner, .bar-inner nav, .bar-inner a { display: flex; align-items: center; }
+  .bar-inner { height: var(--bar-height); gap: clamp(16px, 2.5vw, 36px); }
+  .byline {
+    margin-right: auto;
+    gap: 6px;
+    min-height: 44px;
+    font: 700 21px var(--font-serif-cn);
+    white-space: nowrap;
+  }
+  .byline small, .bar-title { color: var(--text-tertiary); font: 12px var(--font-body); }
+  .byline small { margin-left: 5px; }
+  .bar-inner nav { gap: 4px; }
+  .bar-inner nav a {
+    position: relative;
+    min-height: 44px;
+    padding-inline: clamp(8px, 1.2vw, 17px);
+    gap: 7px;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+  .bar-inner nav b { color: var(--text-primary); font: 600 11px var(--font-mono); }
+  .bar-inner nav a[aria-current] { background: var(--surface-1); }
+  .bar-inner nav a[aria-current]::after {
+    position: absolute;
+    content: '';
+    inset: auto 12px 4px;
+    height: 2px;
+    background: var(--accent);
+  }
+  .bar-inner nav a[aria-current] b, .bar-inner a:hover { color: var(--accent); }
+  .bar-title { border-left: 1px solid var(--line-strong); padding-left: 24px; }
+  .reading-progress {
+    position: absolute;
+    inset: auto 0 -1px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(var(--progress, 0));
+    transform-origin: left;
+  }
+  .roadmap [hidden] { display: none; }
+  .notation {
+    color: var(--text-secondary);
+    font: 500 11px/1.7 var(--font-mono);
+    letter-spacing: .1em;
+  }
+  .notation span:first-of-type { margin-inline: 6px; color: var(--plate-edge); }
+  .notation span:last-child:not(:first-of-type) { font-family: var(--font-body); letter-spacing: .02em; }
+  .roadmap :is(h1, h2, h3) { font-family: var(--font-serif-cn); font-weight: 700; letter-spacing: -.035em; }
+  .cover {
+    position: relative;
+    isolation: isolate;
+    border-bottom: 1px solid var(--line-subtle);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0 0 0 40%;
+    background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1.3px);
+    background-size: 16px 16px;
+    mask-image: radial-gradient(ellipse at 58% 53%, black 20%, transparent 74%);
+  }
+  .cover-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: 'lead figure' 'contents figure';
+    grid-template-rows: 1fr auto;
+    align-items: start;
+    column-gap: clamp(22px, 3vw, 46px);
+    row-gap: var(--space-12);
+    min-height: clamp(650px, calc(100svh - var(--bar-height)), 880px);
+    padding-block: clamp(44px, 6vh, 76px) 28px;
+  }
+  .cover-lead { grid-area: lead; }
+  .cover h1 { margin-block: 28px 24px; font-size: clamp(38px, 4.2vw, 64px); line-height: 1.28; }
+  .cover h1 span { display: block; }
+  .ink, .index { color: var(--accent); }
+  .index { font: 600 12px var(--font-mono); letter-spacing: .06em; }
+  .cover-summary, .chapter-lead, .panel-lead {
+    max-width: 32em;
+    color: var(--text-secondary);
+    font-size: clamp(16px, 1.35vw, 20px);
+    line-height: 1.8;
+  }
+  .cover-summary { max-width: 27em; }
+  .cover-figure {
+    grid-area: figure;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+  }
+  .cover-figure figcaption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid var(--line-strong);
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+  .cover-figure figcaption a { display: inline-flex; align-items: center; min-height: 44px; }
+  @media (min-width: 921px) {
+    .cover-figure :global(.system-stack) { width: 111%; margin-left: -9%; }
+  }
+  .contents { grid-area: contents; border-top: 1px solid var(--line-strong); }
+  .contents li + li { border-top: 1px solid var(--line-subtle); }
+  .contents a {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) auto auto;
+    gap: 12px;
+    align-items: center;
+    padding-block: 15px;
+  }
+  .contents strong { font: 700 clamp(14px, 1.14vw, 17px)/1.5 var(--font-serif-cn); }
+  .contents small { font: 11px var(--font-mono); }
+  .contents small, .contents a > span:last-child { color: var(--text-tertiary); }
+  .roadmap a:hover { color: var(--accent); }
+  .chapter { padding-block: clamp(56px, 6vw, 92px); }
+  .chapter + .chapter { border-top: 1px solid var(--line-subtle); }
+  .chapter > h2 { margin-block: 18px 16px; font-size: clamp(30px, 3.35vw, 48px); line-height: 1.3; }
+  .chapter-lead { margin-bottom: clamp(30px, 3.8vw, 54px); }
+  .system-layout {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    border-block: 1px solid var(--line-strong);
+  }
+  .stack-column {
+    min-width: 0;
+    padding: 28px 32px 24px 0;
+    border-right: 1px solid var(--line-subtle);
+  }
+  .stack-column .notation { margin-bottom: 14px; }
+  .layer-panels { min-width: 0; padding: 28px 0 30px clamp(24px, 3.4vw, 52px); }
+  .layer-panel + .layer-panel:not([hidden]) { scroll-margin-top: 24px; }
+  .layer-panel h3, .flow-card h3, .era-detail h3 { font-size: clamp(23px, 2.1vw, 32px); line-height: 1.42; }
+  .layer-panel h3, .flow-card h3 { margin-block: 16px 12px; }
+  .layer-panel h3 small {
+    margin-right: 12px;
+    color: var(--accent);
+    font: 600 .6em var(--font-mono);
+    letter-spacing: 0;
+  }
+  .mode-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 26px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .mode-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 5px 5px 8px;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+  }
+  .mode-links a[aria-selected='true'] { border-color: var(--accent); font-weight: 700; }
+  .mode-links small { color: var(--text-tertiary); font: 11px var(--font-mono); }
+  .parts > div, .path-note { display: grid; grid-template-columns: minmax(95px, .36fr) 1fr; gap: 16px; padding-block: 16px; }
+  .parts > div + div { border-top: 1px solid var(--line-subtle); }
+  .parts dt, .path-note > span { color: var(--text-secondary); font-size: 13px; font-weight: 500; }
+  .parts dd, .path-note p { font-size: 15px; }
+  .flow-rail { display: flex; }
+  .flow-rail a {
+    position: relative;
+    display: grid;
+    flex: 1;
+    justify-items: center;
+    gap: 10px;
+    padding-bottom: 22px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .flow-rail a::before {
+    position: absolute;
+    content: '';
+    inset: auto -50% 41px 50%;
+    height: 1px;
+    background: var(--line-strong);
+  }
+  .flow-rail a:last-child::before { display: none; }
+  .flow-rail b {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--surface-1);
+    font: 550 13px var(--font-mono);
+  }
+  .flow-rail a[aria-selected='true'] { color: var(--text-primary); }
+  .flow-rail a[aria-selected='true'] b {
+    color: var(--accent);
+    border-color: var(--accent);
+    outline: 1px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .flow-rail a[aria-selected='true']::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: 16px;
+    border-left: 1px solid var(--accent);
+  }
+  .flow-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: clamp(26px, 5vw, 76px);
+    padding: clamp(24px, 3.5vw, 50px);
+    border: 1px solid var(--line-subtle);
+    border-radius: 3px;
+    background: var(--surface-1);
+    box-shadow: var(--card-shadow);
+  }
+  .steps li { display: flex; gap: 14px; align-items: baseline; padding-block: 14px; border-top: 1px solid var(--line-subtle); }
+  .steps li:first-child { border-color: var(--line-strong); }
+  .steps li:last-child { padding-bottom: 0; }
+  .steps strong { font-size: 15px; }
+  .steps p, .era-detail p:not(.notation), .evidence-prose :global(p) { margin-top: 6px; color: var(--text-secondary); font-size: 15px; line-height: 1.85; }
+  .era-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(10px, 2vw, 30px); }
+  .era-choices a { display: grid; justify-items: start; padding-block: 12px; border-top: 2px solid var(--line-strong); }
+  .era-choices a[aria-selected='true'] { border-color: var(--accent); }
+  .era-choices strong { margin-top: 6px; font: 700 clamp(16px, 1.7vw, 24px)/1.5 var(--font-serif-cn); }
+  .era-choices small { color: var(--text-secondary); font: 12px var(--font-mono); }
+  .years { display: flex; align-items: center; width: 100%; gap: clamp(2px, .45vw, 8px); margin-block: 22px 14px; }
+  .years i { width: min(6%, 9px); aspect-ratio: 1; border: 1px solid var(--plate-edge); border-radius: 50%; }
+  .years i.filled { border-color: var(--text-secondary); background: var(--text-secondary); }
+  [aria-selected='true'] .years i.filled { border-color: var(--accent); background: var(--accent); }
+  .era-detail {
+    display: grid;
+    grid-template-columns: minmax(130px, .3fr) 1fr;
+    gap: 24px;
+    margin-top: 18px;
+    padding-block: 28px;
+    border-block: 1px solid var(--line-strong);
+  }
+  .era-detail h3 { font-size: clamp(20px, 1.75vw, 26px); }
+  .era-detail > div { max-width: 47em; }
+  .evidence {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(32px, 6vw, 88px);
+    margin-top: clamp(44px, 6vw, 80px);
+  }
+  .scope-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px; }
+  .scope-facts > div { padding-top: 12px; border-top: 1px solid var(--line-strong); }
+  .scope-facts dt, .scope-facts p { color: var(--text-secondary); font-size: 13px; }
+  .scope-facts strong { display: block; margin-block: 6px; color: var(--accent); font: 700 clamp(24px, 2.3vw, 34px)/1.4 var(--font-serif-cn); }
+  .evidence-prose :global(h2) { margin-bottom: 8px; font: 700 21px/1.4 var(--font-serif-cn); }
+  .evidence-prose :global(p + h2) { margin-top: 22px; }
+  .evidence-prose :global(a) { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .case-exit { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-block: 24px; border-top: 1px solid var(--line-strong); }
+  .case-exit a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; }
+  .case-exit small { color: var(--text-secondary); font-size: 12px; }
+  :global(.no-js) .layer-panel + .layer-panel, :global(.no-js) .flow-card + .flow-card { margin-top: 28px; }
+  @media (max-width: 920px) {
+    .bar-title, .byline small { display: none; }
+    .cover-grid { min-height: 620px; }
+    .stack-column { padding-right: 15px; }
+  }
+  @media (max-width: 760px) {
+    .cover-grid { grid-template-areas: 'lead' 'figure' 'contents'; grid-template-columns: 1fr; gap: 24px; min-height: 0; padding-block: 36px 20px; }
+    .cover::before { inset: 20% 0 10%; }
+    .cover-figure { width: min(100%, 480px); justify-self: center; gap: 12px; }
+    .cover h1 { font-size: clamp(33px, 6.5vw, 46px); margin-block: 18px; }
+    .cover-summary { max-width: 34em; }
+    .system-layout, .flow-card, .evidence { grid-template-columns: 1fr; }
+    .stack-column { padding: 18px 0; border-right: 0; border-bottom: 1px solid var(--line-subtle); }
+    .stack-column :global(.system-stack) { max-width: 390px; margin-inline: auto; }
+    .layer-panels { padding: 24px 0; }
+    .era-detail { grid-template-columns: 1fr; gap: 10px; }
+  }
+  @media (max-width: 639px) {
+    .bar-inner { gap: 6px; }
+    .byline { font-size: 18px; }
+    .bar-inner nav { gap: 0; }
+    .bar-inner nav a { padding-inline: 8px; font-size: 12px; }
+    .bar-inner nav b { display: none; }
+    .bar-inner nav a[aria-current]::after { inset-inline: 8px; }
+    .notation { font-size: 10px; }
+    .contents a { gap: 8px; grid-template-columns: 20px minmax(0, 1fr) auto auto; }
+    .contents small { font-size: 10px; }
+    .scope-facts { gap: 16px; }
+    .parts > div, .path-note { grid-template-columns: 82px 1fr; gap: 12px; }
+    .era-choices small { font-size: 10px; }
+    .case-exit a { font-size: 14px; }
+  }
+</style>
