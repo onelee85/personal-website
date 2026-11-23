@@ -1,6 +1,12 @@
 ---
 import { identity, nav, ui } from '../data/site';
-const prefix = Astro.url.pathname === '/' ? '' : '/';
+const pathname = Astro.url.pathname;
+const links = nav.map(({ label, href }) => ({
+  label,
+  href: href.startsWith('#') && pathname !== '/' ? `/${href}` : href,
+  current: pathname === href ? 'page' as const :
+    href === '/blog/' && pathname.startsWith(href) ? 'location' as const : undefined,
+}));
 ---
 
 <header class="site-nav" data-nav>
@@ -12,7 +18,7 @@ const prefix = Astro.url.pathname === '/' ? '' : '/';
 
     <div class="nav-right">
       <nav class="nav-links" aria-label={ui.a11y.primaryNav}>
-        {nav.map((item) => <a href={`${prefix}${item.href}`} class="nav-link glare-hover">{item.label}</a>)}
+        {links.map((item) => <a href={item.href} aria-current={item.current} class="nav-link glare-hover">{item.label}</a>)}
       </nav>
       <span class="nav-status"><i aria-hidden="true"></i>{ui.nav.locationCode}</span>
       <button
@@ -28,8 +34,8 @@ const prefix = Astro.url.pathname === '/' ? '' : '/';
 
   <div id="mobile-menu" class="mobile-menu" hidden>
     <nav aria-label={ui.a11y.mobileNav}>
-      {nav.map((item, index) => (
-        <a href={`${prefix}${item.href}`} class="mobile-link">
+      {links.map((item, index) => (
+        <a href={item.href} aria-current={item.current} class="mobile-link">
           <span>0{index + 1}</span>{item.label}
         </a>
       ))}
@@ -70,16 +76,16 @@ const prefix = Astro.url.pathname === '/' ? '' : '/';
   }
 
   .brand {
-    gap: 10px;
+    gap: 8px;
     font-family: var(--font-display);
-    font-size: 15px;
-    font-weight: 750;
-    letter-spacing: 0.08em;
+    font-size: 13px;
+    font-weight: 650;
+    letter-spacing: 0.1em;
   }
 
   .brand-dot {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     background: var(--accent);
   }
 
@@ -100,7 +106,8 @@ const prefix = Astro.url.pathname === '/' ? '' : '/';
     transition: color var(--dur-hover) var(--ease-out);
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  a[aria-current] {
     color: var(--accent);
   }
 
@@ -137,6 +144,7 @@ const prefix = Astro.url.pathname === '/' ? '' : '/';
     z-index: 49;
     padding: 24px var(--content-pad);
     background: var(--canvas);
+    overflow-y: auto;
   }
 
   .mobile-menu:not([hidden]) {

@@ -22,13 +22,24 @@ const marquee = contact.marquee;
         <span>{contact.panelLabel}</span>
         <i aria-hidden="true"></i>
       </div>
-      <strong>{contact.placeholderTitle}</strong>
+      <strong>{contact.panelTitle}</strong>
       <p>{contact.note}</p>
-      <div class="contact-placeholders" aria-label={contact.placeholderAria}>
-        <span>{contact.emailPlaceholder}</span>
-        <span>{contact.githubPlaceholder}</span>
-      </div>
-      <a href="#work">{contact.projectLink} <span class="arrow" aria-hidden="true">↗</span></a>
+      <ul class="contact-channels" aria-label={contact.channelsAria}>
+        {contact.channels.map((channel) => (
+          <li>
+            <span class="contact-channel-label">{channel.label}</span>
+            {channel.href ? (
+              <a
+                href={channel.href}
+                target={channel.external ? '_blank' : undefined}
+                rel={channel.external ? 'noopener noreferrer' : undefined}
+              >{channel.value}</a>
+            ) : (
+              <span class="contact-channel-value">{channel.value}</span>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   </div>
 
@@ -39,13 +50,9 @@ const marquee = contact.marquee;
 </section>
 
 <style>
-  .contact {
-    padding-top: clamp(80px, 12vw, 176px);
-  }
-
   .contact-marquee {
     overflow: hidden;
-    margin-bottom: clamp(56px, 8vw, 112px);
+    margin-bottom: clamp(24px, 3vw, 40px);
     padding-block: 12px;
     border-block: 1px solid var(--line-subtle);
     mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
@@ -68,15 +75,15 @@ const marquee = contact.marquee;
   .contact-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
-    align-items: end;
-    gap: clamp(40px, 7vw, 100px);
+    align-items: start;
+    gap: clamp(24px, 4vw, 64px);
   }
 
   .contact h2 {
-    max-width: 17ch;
-    margin-top: 22px;
+    max-width: 14em;
+    margin-top: var(--space-3);
     font-family: var(--font-serif-cn);
-    font-size: clamp(38px, 5.4vw, 78px);
+    font-size: clamp(32px, 4vw, 60px);
     font-weight: 900;
     letter-spacing: -0.04em;
     line-height: 1.2;
@@ -108,11 +115,12 @@ const marquee = contact.marquee;
 
   .contact-panel > strong {
     display: block;
-    margin-top: 36px;
+    margin-top: var(--space-2);
     color: var(--text-primary);
     font-family: var(--font-serif-cn);
-    font-size: clamp(38px, 4vw, 56px);
+    font-size: clamp(28px, 3vw, 40px);
     font-weight: 900;
+    line-height: 1.2;
   }
 
   .contact-panel > p {
@@ -121,23 +129,38 @@ const marquee = contact.marquee;
     font-size: 13px;
   }
 
-  .contact-placeholders {
+  .contact-channels {
     display: grid;
-    gap: 8px;
-    margin-top: 24px;
-    padding-block: 16px;
-    border-block: 1px solid var(--line-subtle);
-    color: var(--text-tertiary);
+    gap: 12px;
+    margin: 24px 0 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line-subtle);
+    list-style: none;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
   }
 
-  .contact-panel > a {
-    display: inline-flex;
-    gap: 8px;
-    margin-top: 24px;
+  .contact-channels li {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .contact-channel-label {
+    color: var(--text-tertiary);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .contact-channels a,
+  .contact-channel-value {
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+  }
+
+  .contact-channels a:hover {
     color: var(--accent);
-    font-size: 13px;
   }
 
   .contact-meta {

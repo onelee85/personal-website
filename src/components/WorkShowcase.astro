@@ -150,9 +150,9 @@ const { projects } = Astro.props;
   }
 
   .work-text em {
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: var(--fs-meta);
     font-style: normal;
     letter-spacing: 0.05em;
   }
@@ -205,12 +205,13 @@ const { projects } = Astro.props;
 
   .preview-meta {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 16px;
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.05em;
   }
 
@@ -241,22 +242,23 @@ const { projects } = Astro.props;
 
   .preview-specs > div {
     display: grid;
-    grid-template-columns: 64px 1fr;
+    grid-template-columns: 64px minmax(0, 1fr);
     gap: 16px;
     padding-block: 10px;
     border-bottom: 1px solid var(--line-subtle);
-    font-size: 11px;
+    font-size: 14px;
   }
 
   .preview-specs dt {
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.1em;
   }
 
   .preview-specs dd {
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
   }
 
   .preview-facts {
@@ -285,8 +287,8 @@ const { projects } = Astro.props;
   }
 
   .preview-facts span {
-    color: var(--text-tertiary);
-    font-size: 10px;
+    color: var(--text-secondary);
+    font-size: var(--fs-meta);
   }
 
   .case-link {

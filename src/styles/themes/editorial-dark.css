@@ -47,11 +47,11 @@
   --dur-enter: 560ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --fs-thesis: clamp(42px, 6.4vw, 96px);
+  --fs-thesis: clamp(38px, 4.6vw, 68px);
   --fs-display: clamp(38px, 5.8vw, 82px);
   --fs-section: clamp(32px, 4vw, 60px);
   --fs-project: clamp(26px, 3vw, 44px);
-  --fs-lead: clamp(18px, 1.8vw, 22px);
+  --fs-lead: clamp(16px, 1.5vw, 19px);
   --fs-body: 16px;
   --fs-meta: 12px;
 }

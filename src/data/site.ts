@@ -1,4 +1,4 @@
-// 网站公开内容的单一来源。联系方式与待确认任职信息在公开前补充。
+// 网站公开内容的单一来源。待确认任职信息在公开前补充。
 export const identity = {
   name: '李皎',
   mark: 'LI JIAO',
@@ -16,11 +16,12 @@ export const hero = {
 } as const;
 
 export const nav = [
-  { label: 'Focus', href: '#focus' },
-  { label: 'Work', href: '#work' },
-  { label: 'Journey', href: '#journey' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: '专业能力', href: '#focus' },
+  { label: '项目案例', href: '#work' },
+  { label: '职业经历', href: '#journey' },
+  { label: '工作方法', href: '#about' },
+  { label: 'Blog', href: '/blog/' },
+  { label: '联系我', href: '#contact' },
 ] as const;
 
 export const capabilities = [
@@ -153,12 +154,14 @@ export const contact = {
   eyebrow: 'Contact / Next conversation',
   panelLabel: 'PUBLIC CONTACT',
   headline: '如果你正在解决复杂系统、技术团队或 AI 应用落地的问题，我们可以聊聊。',
-  note: '当前为本地网站雏形。邮箱、GitHub 与其他公开联系方式将在你确认后补充。',
-  placeholderTitle: '待补充',
-  placeholderAria: '待补充的联系方式',
-  emailPlaceholder: 'EMAIL · NOT SET',
-  githubPlaceholder: 'GITHUB · NOT SET',
-  projectLink: '先查看项目记录',
+  note: '以下是可直接使用的公开联系方式。关于工作机会、项目合作或工程问题，都欢迎来信。',
+  panelTitle: '欢迎联系',
+  channelsAria: '公开联系方式',
+  channels: [
+    { label: 'EMAIL', value: 'onelee85@qq.com', href: 'mailto:onelee85@qq.com', external: false },
+    { label: 'GITHUB', value: 'github.com/onelee85', href: 'https://github.com/onelee85/', external: true },
+    { label: 'WECHAT', value: 'onelee85', href: '', external: false },
+  ],
   marquee: 'ARCHITECTURE · ENGINEERING LEADERSHIP · AI APPLICATION · SHANGHAI · BUILD WITH EVIDENCE · ',
 } as const;
 
@@ -219,8 +222,8 @@ export const ui = {
     backToTop: '回到顶部',
   },
   nav: {
-    menu: 'Menu',
-    close: 'Close',
+    menu: '菜单',
+    close: '关闭',
     locationCode: 'SHANGHAI',
   },
   labels: {

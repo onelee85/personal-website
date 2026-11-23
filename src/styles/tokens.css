@@ -10,7 +10,7 @@
   --space-16: 64px;
   --space-24: 96px;
 
-  --section-gap: clamp(72px, 9vw, 144px);
+  --section-gap: clamp(52px, 5vw, 80px);
   --content-max: 1440px;
   --content-pad: clamp(20px, 4vw, 72px);
   --measure: 68ch;

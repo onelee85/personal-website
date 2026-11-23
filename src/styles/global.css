@@ -212,7 +212,7 @@ a:hover .arrow {
 
 @media (max-width: 639px) {
   :root {
-    --section-gap: 76px;
+    --section-gap: 48px;
   }
 
   html {
