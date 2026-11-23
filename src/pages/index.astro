@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getFeaturedProjects } from '../lib/projects';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import CapabilityBoard from '../components/CapabilityBoard.astro';
@@ -9,11 +9,11 @@ import About from '../components/About.astro';
 import ContactFooter from '../components/ContactFooter.astro';
 import { seo } from '../data/site';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const projects = await getFeaturedProjects();
 ---
 
 <BaseLayout description={seo.homeDescription}>
-  <Hero />
+  <Hero projects={projects} />
   <CapabilityBoard />
   <WorkShowcase projects={projects} />
   <Experience />

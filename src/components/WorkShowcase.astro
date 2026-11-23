@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import SectionHeading from './SectionHeading.astro';
-import ProjectVisual from './ProjectVisual.astro';
 import { sections, ui } from '../data/site';
 
 interface Props {
@@ -33,8 +32,9 @@ const { projects } = Astro.props;
               <span>{project.data.tagline}</span>
               <em>{project.data.domain}</em>
             </span>
-            <span class="work-toggle" aria-hidden="true">↗</span>
+            <span class="work-toggle" aria-hidden="true">→</span>
           </button>
+          <noscript><a class="fallback-link" href={`/work/${project.id}/`}>{project.data.title} ↗</a></noscript>
         </article>
       ))}
     </div>
@@ -50,19 +50,16 @@ const { projects } = Astro.props;
           aria-hidden={index !== 0}
           inert={index !== 0}
         >
-          <ProjectVisual theme={project.data.theme} />
           <div class="preview-copy">
             <div class="preview-meta">
-              <span>{project.data.status}</span>
-              <span>{project.data.period}</span>
+              <h3>{project.data.title}</h3>
+              {project.data.period && <span>{project.data.period}</span>}
             </div>
-            <h3>{project.data.title}</h3>
             <p>{project.data.summary}</p>
 
-            <dl class="preview-specs">
-              <div><dt>{ui.case.role}</dt><dd>{project.data.role}</dd></div>
-              <div><dt>{ui.labels.stack}</dt><dd>{project.data.stack.slice(0, 4).join(' / ')}</dd></div>
-            </dl>
+            {project.data.role && <dl class="preview-specs">
+              <div><dt>我的角色</dt><dd>{project.data.role}</dd></div>
+            </dl>}
 
             {project.data.facts.length > 0 && (
               <div class="preview-facts">
@@ -173,7 +170,7 @@ const { projects } = Astro.props;
   }
 
   .work-select:is(:hover, .is-active) .work-toggle {
-    transform: translate(3px, -3px);
+    transform: translateX(3px);
   }
 
   .work-preview {
@@ -200,7 +197,10 @@ const { projects } = Astro.props;
   }
 
   .preview-copy {
-    padding: 24px 4px 0;
+    padding: clamp(20px, 3vw, 40px);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface-1);
   }
 
   .preview-meta {
@@ -208,29 +208,27 @@ const { projects } = Astro.props;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 16px;
+    align-items: baseline;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--line-subtle);
     color: var(--text-secondary);
     font-family: var(--font-mono);
     font-size: var(--fs-meta);
     letter-spacing: 0.05em;
   }
 
-  .preview-meta span:first-child {
+  .preview-meta h3 {
     color: var(--accent);
-  }
-
-  .preview-copy h3 {
-    font-family: var(--font-serif-cn);
-    font-size: clamp(28px, 3.4vw, 48px);
-    font-weight: 900;
-    letter-spacing: -0.03em;
+    font: inherit;
+    font-weight: bold;
   }
 
   .preview-copy > p {
     max-width: 58ch;
-    margin-top: 12px;
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1.8;
   }
 
   .preview-specs {
@@ -310,37 +308,47 @@ const { projects } = Astro.props;
       grid-template-columns: 1fr;
     }
 
+    .work-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      border: 0;
+    }
+
     .work-preview {
-      position: relative;
-      top: auto;
-      margin-top: 24px;
+      position: static;
     }
 
     .work-select {
-      min-height: 128px;
-    }
-  }
-
-  @media (max-width: 639px) {
-    .work-select {
-      grid-template-columns: 34px minmax(0, 1fr) 16px;
-      gap: 10px;
-      padding-inline: 4px;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      min-height: 52px;
+      padding: 10px;
     }
 
     .work-num {
-      font-size: 18px;
+      align-self: center;
+      padding: 0;
+      font-size: 14px;
     }
 
-    .preview-meta {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 4px;
+    .work-text strong {
+      font-size: clamp(15px, 2vw, 20px);
+      line-height: 1.4;
     }
 
-    .preview-facts {
-      grid-template-columns: 1fr;
+    .work-text > span, .work-text em, .work-toggle {
+      display: none;
     }
+  }
+
+  .fallback-link {
+    display: block;
+    padding: 16px 8px;
+  }
+
+  :global(.no-js) .work-select {
+    display: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -370,10 +378,22 @@ const { projects } = Astro.props;
       });
     };
 
+    const selectLinkedProject = () => {
+      const target = triggers.find((trigger) => trigger.closest('article')?.id === location.hash.slice(1));
+      if (target) activate(target.dataset.workIndex ?? null);
+    };
+
+    window.addEventListener('hashchange', selectLinkedProject);
+    selectLinkedProject();
+    document.querySelectorAll<HTMLAnchorElement>('.hero-projects a').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (link.hash === location.hash) selectLinkedProject();
+      });
+    });
+
     triggers.forEach((trigger) => {
       const index = trigger.dataset.workIndex ?? null;
       trigger.addEventListener('pointerenter', () => activate(index));
-      trigger.addEventListener('focus', () => activate(index));
       trigger.addEventListener('click', () => activate(index));
     });
   });

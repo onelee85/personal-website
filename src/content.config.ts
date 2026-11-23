@@ -8,12 +8,13 @@ const projects = defineCollection({
     tagline: z.string(),
     summary: z.string(),
     order: z.number(),
-    period: z.string(),
-    role: z.string(),
+    featured: z.boolean().default(true),
+    period: z.string().optional(),
+    role: z.string().optional(),
     domain: z.string(),
     status: z.string(),
-    theme: z.enum(['live', 'anonymous', 'delivery', 'social']),
-    stack: z.array(z.string()),
+    theme: z.enum(['live', 'anonymous', 'delivery', 'social']).optional(),
+    stack: z.array(z.string()).default([]),
     facts: z.array(z.object({
       value: z.string(),
       label: z.string(),
@@ -26,4 +27,14 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+const blog = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/),
+    tags: z.array(z.string().trim()),
+    categories: z.array(z.string()),
+  }),
+});
+
+export const collections = { projects, blog };

@@ -1,0 +1,75 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { blogTagId } from '../../lib/blog-tags';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const byName = new Intl.Collator('zh-CN', { numeric: true });
+const posts = (await getCollection('blog')).sort((a, b) => byName.compare(a.data.title, b.data.title));
+const groups = new Map<string, { label: string; posts: CollectionEntry<'blog'>[] }>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    const id = blogTagId(tag);
+    const group = groups.get(id);
+    if (!group) {
+      groups.set(id, { label: tag, posts: [post] });
+    } else if (group.posts.at(-1) !== post) {
+      group.posts.push(post);
+    }
+  }
+}
+const tags = [...groups].sort(([, a], [, b]) => b.posts.length - a.posts.length || byName.compare(a.label, b.label));
+---
+
+<BaseLayout title="Blog" description="李皎的技术博客，记录后端开发、线上故障排查、直播技术和研发团队管理实践。">
+  <div class="container archive">
+    <header>
+      <h1>Blog<span aria-hidden="true">.</span></h1>
+      <p>技术实践、研发管理与个人思考 · {posts.length} 篇文章</p>
+    </header>
+    <div class="archive-layout">
+      <nav class="tag-index" aria-labelledby="tags">
+        <h2 id="tags">按标签浏览</h2>
+        <ul role="list">
+          {tags.map(([id, group]) => (
+            <li><a href={`#${encodeURIComponent(id)}`}>{group.label}<span>{group.posts.length}</span></a></li>
+          ))}
+        </ul>
+      </nav>
+      <div class="entries">
+        {tags.map(([id, group]) => (
+          <section aria-labelledby={id}>
+            <h2 id={id}>{group.label}</h2>
+            <ul role="list">
+              {group.posts.map(post => (
+                <li><a class="entry" href={`/blog/${post.id}/`}>{post.data.title}</a></li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .archive { max-width: 1120px; padding-block: clamp(106px, 12vw, 156px) var(--section-gap); }
+  header { padding-bottom: var(--space-8); border-bottom: 1px solid var(--line-strong); }
+  h1 { font-size: var(--fs-display); letter-spacing: -0.05em; }
+  h1 span { color: var(--accent); }
+  header p { margin-top: var(--space-3); color: var(--text-secondary); }
+  .archive-layout { display: grid; grid-template-columns: minmax(180px, 28%) minmax(0, 1fr); gap: var(--space-12); margin-top: var(--space-8); }
+  .tag-index { position: sticky; top: 96px; align-self: start; }
+  .tag-index h2 { margin-bottom: var(--space-3); font-size: 16px; }
+  .tag-index ul { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; padding: 4px; max-height: calc(100dvh - 152px); overflow-y: auto; }
+  .tag-index a { display: inline-flex; gap: 6px; align-items: center; padding: 5px 9px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font-size: 14px; overflow-wrap: anywhere; }
+  .tag-index a span { color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; }
+  .tag-index a:hover, .entry:hover, section h2:target { color: var(--accent); }
+  section + section { margin-top: var(--space-12); }
+  section h2 { margin-bottom: var(--space-3); font-size: 30px; overflow-wrap: anywhere; }
+  .entry { display: block; padding-block: 15px; border-bottom: 1px solid var(--line-subtle); overflow-wrap: anywhere; font-size: clamp(16px, 1.6vw, 20px); font-weight: 500; }
+  @media (max-width: 700px) {
+    .archive-layout { display: block; }
+    .tag-index { position: static; margin-bottom: var(--space-8); }
+    .tag-index ul { max-height: 13rem; }
+  }
+</style>

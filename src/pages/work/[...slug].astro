@@ -1,5 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getFeaturedProjects } from '../../lib/projects';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
 import { ui } from '../../data/site';
@@ -18,7 +19,7 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const projects = await getFeaturedProjects();
 const currentIndex = projects.findIndex((item) => item.id === project.id);
 const nextProject = projects[(currentIndex + 1) % projects.length];
 ---
@@ -28,31 +29,31 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
     <header class="container case-hero">
       <a class="back-link" href="/#work"><span aria-hidden="true">←</span> {ui.actions.backToWork}</a>
       <div class="case-kicker">
-        <span>{ui.case.studyLabel} / 0{project.data.order}</span>
+        <span>{ui.case.studyLabel}{project.data.featured && ` / 0${project.data.order}`}</span>
         <span>{project.data.status}</span>
       </div>
       <h1>{project.data.title}</h1>
       <p>{project.data.tagline}</p>
       <dl class="case-meta">
-        <div><dt>{ui.case.period}</dt><dd>{project.data.period}</dd></div>
-        <div><dt>{ui.case.role}</dt><dd>{project.data.role}</dd></div>
+        {project.data.period && <div><dt>{ui.case.period}</dt><dd>{project.data.period}</dd></div>}
+        {project.data.role && <div><dt>{ui.case.role}</dt><dd>{project.data.role}</dd></div>}
         <div><dt>{ui.case.domain}</dt><dd>{project.data.domain}</dd></div>
       </dl>
     </header>
 
-    <div class="container case-visual reveal">
+    {project.data.theme && <div class="container case-visual reveal">
       <ProjectVisual theme={project.data.theme} />
-    </div>
+    </div>}
 
-    <div class="container case-layout">
-      <aside class="case-sidebar reveal">
+    <div class="container case-layout" class:list={[{ 'case-layout--single': !project.data.stack.length }]}>
+      {project.data.stack.length > 0 && <aside class="case-sidebar reveal">
         <span class="eyebrow">{ui.case.systemContext}</span>
         <h2>{ui.case.specsTitle}</h2>
         <ul class="tag-list" role="list" aria-label={ui.a11y.technologyPractice}>
           {project.data.stack.map((item) => <li class="tag">{item}</li>)}
         </ul>
         <p>{ui.case.evidenceNote}</p>
-      </aside>
+      </aside>}
 
       <div class="case-content">
         {project.data.facts.length > 0 && (
@@ -193,6 +194,10 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
     gap: clamp(40px, 8vw, 120px);
     padding-top: clamp(72px, 10vw, 144px);
     padding-bottom: var(--section-gap);
+  }
+
+  .case-layout--single {
+    grid-template-columns: minmax(0, 72ch);
   }
 
   .case-sidebar {

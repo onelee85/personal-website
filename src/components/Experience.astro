@@ -1,6 +1,6 @@
 ---
 import SectionHeading from './SectionHeading.astro';
-import { experience, sections, ui } from '../data/site';
+import { experience, sections } from '../data/site';
 ---
 
 <section class="section container experience" aria-labelledby="journey">
@@ -15,10 +15,7 @@ import { experience, sections, ui } from '../data/site';
         </div>
         <div class="timeline-marker" aria-hidden="true"><i></i></div>
         <div class="timeline-content">
-          <div class="timeline-title">
-            <h3>{item.org}</h3>
-            {'pending' in item && item.pending && <span>{ui.labels.pending}</span>}
-          </div>
+          <h3>{item.org}</h3>
           <strong>{item.title}</strong>
           <p>{item.note}</p>
         </div>
@@ -98,26 +95,10 @@ import { experience, sections, ui } from '../data/site';
     border-bottom: 1px solid var(--line-subtle);
   }
 
-  .timeline-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .timeline-title h3 {
+  .timeline-content h3 {
     font-size: clamp(21px, 2.2vw, 30px);
     font-weight: 620;
     letter-spacing: -0.025em;
-  }
-
-  .timeline-title > span {
-    flex: 0 0 auto;
-    padding: 2px 7px;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-pill);
-    color: var(--text-tertiary);
-    font-family: var(--font-mono);
-    font-size: 9px;
   }
 
   .timeline-content > strong {
@@ -168,12 +149,6 @@ import { experience, sections, ui } from '../data/site';
     .timeline-content {
       grid-column: 2;
       padding-bottom: 34px;
-    }
-
-    .timeline-title {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 8px;
     }
   }
 </style>

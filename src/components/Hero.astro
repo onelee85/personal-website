@@ -1,8 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import { identity, hero, ui } from '../data/site';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { projects } = Astro.props;
 ---
 
 <section class="hero" id="hero" aria-label={ui.a11y.personalIntro}>

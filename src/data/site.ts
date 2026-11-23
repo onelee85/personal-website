@@ -62,10 +62,9 @@ export const capabilities = [
 export const experience = [
   {
     period: '近期',
-    org: '某直播娱乐平台',
-    title: '全栈与平台架构（职责描述）',
-    note: '负责后端、前端、部署运维与监控，并推进 LLM API、RAG 与 AI 辅助研发。公开版本匿名化；正式职称与任职分段待确认。',
-    pending: true,
+    org: '上海顺天浩网络科技有限公司',
+    title: '全栈与平台架构',
+    note: '负责后端、前端、部署运维与监控，并推进 LLM API、RAG 与 AI 辅助研发。正式职称与任职分段待确认。',
   },
   {
     period: '2024.04 — 2025.06',
@@ -181,7 +180,6 @@ export const sections = {
     eyebrow: 'Selected work / Evidence based',
     index: 'S / 02',
     title: '项目记录',
-    description: '四个真实案例，区分个人职责、团队成果和待补证据。封面为架构示意图，不是生产系统截图。',
   },
   journey: {
     eyebrow: 'Experience / 2007 — Now',
@@ -215,7 +213,7 @@ export const ui = {
   actions: {
     viewProjects: '查看代表项目',
     viewJourney: '职业路径',
-    readCase: '阅读完整案例',
+    readCase: '查看项目详情',
     backToWork: '返回项目集',
     allProjects: '全部项目',
     backHome: '返回首页',
@@ -227,7 +225,6 @@ export const ui = {
     locationCode: 'SHANGHAI',
   },
   labels: {
-    pending: '待确认',
     nextCase: 'NEXT CASE',
     stack: 'STACK',
   },

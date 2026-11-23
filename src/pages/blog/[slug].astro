@@ -1,0 +1,66 @@
+---
+import { getCollection, render } from 'astro:content';
+import { blogTagId } from '../../lib/blog-tags';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('blog')).map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, date, categories, tags } = post.data;
+const published = date.slice(0, 10);
+---
+
+<BaseLayout title={title} description={`${title} · 李皎的技术博客 · ${published} · ${tags.join('、')}`}>
+  <article class="container post">
+    <header>
+      <a class="back" href="/blog/">← Blog 文章列表</a>
+      <h1>{title}</h1>
+      <div class="meta">
+        <time datetime={published}>{published}</time>
+        {categories.map(category => <span>{category}</span>)}
+      </div>
+    </header>
+    <div class="prose"><Content /></div>
+    <footer>
+      <ul class="tag-list" aria-label="文章标签">
+        {tags.map(tag => <li><a class="tag" href={`/blog/#${encodeURIComponent(blogTagId(tag))}`}>{tag}</a></li>)}
+      </ul>
+      <a class="back" href="/blog/#tags">← 浏览全部标签</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .post { max-width: calc(760px + 2 * var(--content-pad)); padding-block: clamp(100px, 10vw, 144px) var(--section-gap); }
+  header { border-bottom: 1px solid var(--line-strong); padding-bottom: var(--space-6); }
+  .back { color: var(--accent); font-size: 14px; }
+  .back:hover { text-decoration: underline; }
+  h1 { margin-block: var(--space-6) var(--space-4); font-family: var(--font-serif-cn); font-size: clamp(32px, 5vw, 54px); line-height: 1.25; overflow-wrap: anywhere; }
+  .meta { display: flex; flex-wrap: wrap; gap: var(--space-4); color: var(--text-secondary); font-size: 14px; }
+  time { font-family: var(--font-mono); }
+  .prose { margin-block: var(--space-8) var(--space-12); font-size: 17px; line-height: 1.9; overflow-wrap: anywhere; }
+  .prose :global(p), .prose :global(ul), .prose :global(ol), .prose :global(pre), .prose :global(blockquote), .prose :global(table) { margin-block: 1em; }
+  .prose :global(:is(h2, h3, h4, h5, h6)) { margin-block: 1.65em 0.6em; line-height: 1.45; }
+  .prose :global(h2) { font-size: clamp(24px, 3vw, 30px); }
+  .prose :global(h3) { font-size: 21px; }
+  .prose :global(:is(ul, ol)) { padding-inline-start: 1.6em; }
+  .prose :global(li > :is(ul, ol)) { margin-block: 0.25em; }
+  .prose :global(a) { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .prose :global(img) { margin: 1.25em auto; height: auto; border-radius: var(--radius-sm); background: white; }
+  .prose :global(blockquote) { padding-left: 1em; border-left: 3px solid var(--accent); color: var(--text-secondary); }
+  .prose :global(pre) { max-width: 100%; overflow: auto; padding: 1em; border-radius: var(--radius-md); line-height: 1.65; }
+  .prose :global(code) { font-family: var(--font-mono); font-size: 0.87em; }
+  .prose :global(:not(pre) > code) { padding: 0.12em 0.3em; background: var(--surface-2); border-radius: var(--radius-sm); }
+  .prose :global(table) { display: block; overflow-x: auto; border-collapse: collapse; font-size: 15px; }
+  .prose :global(:is(td, th)) { min-width: 5em; padding: 0.5em 0.8em; border: 1px solid var(--line-strong); text-align: start; }
+  .prose :global(th) { background: var(--surface-1); }
+  footer { display: grid; gap: var(--space-6); justify-items: start; padding-top: var(--space-6); border-top: 1px solid var(--line-strong); }
+  .tag { font-size: 13px; }
+  .tag:hover { color: var(--accent); border-color: var(--accent); }
+</style>
