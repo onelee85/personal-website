@@ -1,0 +1,77 @@
+---
+interface Props {
+  id: string;
+  eyebrow: string;
+  index: string;
+  title: string;
+  description?: string;
+}
+
+const { id, eyebrow, index, title, description } = Astro.props;
+---
+
+<div class="section-heading reveal">
+  <div class="heading-meta">
+    <span class="eyebrow">{eyebrow}</span>
+    <span class="heading-index">{index}</span>
+  </div>
+  <div class="heading-main">
+    <h2 id={id}>{title}</h2>
+    {description && <p>{description}</p>}
+  </div>
+</div>
+
+<style>
+  .section-heading {
+    margin-bottom: clamp(36px, 5vw, 72px);
+  }
+
+  .heading-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line-subtle);
+  }
+
+  .heading-meta .eyebrow {
+    color: var(--accent);
+  }
+
+  .heading-index {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+  }
+
+  .heading-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.48fr);
+    align-items: end;
+    gap: 32px;
+    padding-top: 24px;
+  }
+
+  h2 {
+    font-family: var(--font-serif-cn);
+    font-size: var(--fs-section);
+    font-weight: 900;
+    letter-spacing: -0.035em;
+  }
+
+  .heading-main p {
+    max-width: 48ch;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 767px) {
+    .heading-main {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+</style>

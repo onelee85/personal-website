@@ -1,0 +1,54 @@
+:root {
+  color-scheme: dark;
+  --canvas: #101318;
+  --surface-1: #171b21;
+  --surface-2: #20252c;
+  --text-primary: #eeeee9;
+  --text-secondary: #a3a9b2;
+  --text-tertiary: #747b85;
+  --line-subtle: rgb(255 255 255 / 8%);
+  --line-strong: rgb(255 255 255 / 16%);
+  --accent: #b7f72a;
+  --accent-soft: rgb(183 247 42 / 12%);
+  --on-accent: #172006;
+  --layer-1: rgb(255 255 255 / 2%);
+  --layer-2: rgb(255 255 255 / 4%);
+
+  --font-display: 'Archivo Variable', 'Noto Sans SC', system-ui, sans-serif;
+  --font-serif-cn: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-body: 'Noto Sans SC', 'Archivo Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  --section-gap: clamp(72px, 9vw, 144px);
+  --content-max: 1440px;
+  --content-pad: clamp(20px, 4vw, 72px);
+  --measure: 68ch;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --dur-fast: 120ms;
+  --dur-hover: 180ms;
+  --dur-enter: 560ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --fs-thesis: clamp(42px, 6.4vw, 96px);
+  --fs-display: clamp(38px, 5.8vw, 82px);
+  --fs-section: clamp(32px, 4vw, 60px);
+  --fs-project: clamp(26px, 3vw, 44px);
+  --fs-lead: clamp(18px, 1.8vw, 22px);
+  --fs-body: 16px;
+  --fs-meta: 12px;
+}

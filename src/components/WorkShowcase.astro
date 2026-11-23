@@ -1,0 +1,378 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import SectionHeading from './SectionHeading.astro';
+import ProjectVisual from './ProjectVisual.astro';
+import { sections, ui } from '../data/site';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { projects } = Astro.props;
+---
+
+<section class="section container work-showcase" aria-labelledby="work" data-work-showcase>
+  <SectionHeading id="work" {...sections.work} />
+
+  <div class="work-shell">
+    <div class="work-list" role="list" aria-label={ui.a11y.selectedProjects}>
+      {projects.map((project, index) => (
+        <article id={`work-${project.id}`} class="work-item reveal" role="listitem" style={`--reveal-i:${index}`}>
+          <button
+            class="work-select glare-hover"
+            class:list={[{ 'is-active': index === 0 }]}
+            type="button"
+            data-work-trigger
+            data-work-index={index}
+            aria-pressed={index === 0}
+            aria-controls={`preview-${project.id}`}
+          >
+            <span class="work-num">0{project.data.order}</span>
+            <span class="work-text">
+              <strong>{project.data.title}</strong>
+              <span>{project.data.tagline}</span>
+              <em>{project.data.domain}</em>
+            </span>
+            <span class="work-toggle" aria-hidden="true">↗</span>
+          </button>
+        </article>
+      ))}
+    </div>
+
+    <div class="work-preview reveal" style="--reveal-i:2">
+      {projects.map((project, index) => (
+        <article
+          id={`preview-${project.id}`}
+          class="preview-card"
+          class:list={[{ 'is-active': index === 0 }]}
+          data-work-preview
+          data-work-index={index}
+          aria-hidden={index !== 0}
+          inert={index !== 0}
+        >
+          <ProjectVisual theme={project.data.theme} />
+          <div class="preview-copy">
+            <div class="preview-meta">
+              <span>{project.data.status}</span>
+              <span>{project.data.period}</span>
+            </div>
+            <h3>{project.data.title}</h3>
+            <p>{project.data.summary}</p>
+
+            <dl class="preview-specs">
+              <div><dt>{ui.case.role}</dt><dd>{project.data.role}</dd></div>
+              <div><dt>{ui.labels.stack}</dt><dd>{project.data.stack.slice(0, 4).join(' / ')}</dd></div>
+            </dl>
+
+            {project.data.facts.length > 0 && (
+              <div class="preview-facts">
+                {project.data.facts.slice(0, 2).map((fact) => (
+                  <div><strong>{fact.value}</strong><span>{fact.label}</span></div>
+                ))}
+              </div>
+            )}
+
+            <a class="case-link" href={`/work/${project.id}/`}>
+              {ui.actions.readCase} <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .work-shell {
+    display: grid;
+    grid-template-columns: minmax(340px, 0.88fr) minmax(0, 1.12fr);
+    align-items: start;
+    gap: clamp(28px, 4vw, 64px);
+  }
+
+  .work-list {
+    border-top: 1px solid var(--line-subtle);
+  }
+
+  .work-item {
+    border-bottom: 1px solid var(--line-subtle);
+    scroll-margin-top: 100px;
+  }
+
+  .work-select {
+    width: 100%;
+    min-height: 152px;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr) 20px;
+    align-items: center;
+    gap: 18px;
+    padding: 24px 10px;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .work-num {
+    align-self: start;
+    padding-top: 6px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1;
+    transition: color var(--dur-hover) var(--ease-out);
+  }
+
+  .work-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .work-text strong {
+    font-family: var(--font-display);
+    font-size: clamp(25px, 2.7vw, 40px);
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    transition: color var(--dur-hover) var(--ease-out);
+  }
+
+  .work-text > span {
+    max-width: 38ch;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .work-text em {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-style: normal;
+    letter-spacing: 0.05em;
+  }
+
+  .work-toggle {
+    color: var(--text-tertiary);
+    transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+  }
+
+  .work-select:is(:hover, .is-active) {
+    background: var(--layer-1);
+  }
+
+  .work-select:is(:hover, .is-active) .work-num,
+  .work-select:is(:hover, .is-active) .work-text strong,
+  .work-select:is(:hover, .is-active) .work-toggle {
+    color: var(--accent);
+  }
+
+  .work-select:is(:hover, .is-active) .work-toggle {
+    transform: translate(3px, -3px);
+  }
+
+  .work-preview {
+    position: sticky;
+    top: 92px;
+    display: grid;
+  }
+
+  .preview-card {
+    grid-area: 1 / 1;
+    min-width: 0;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(16px);
+    transition: opacity 360ms var(--ease-out), transform 480ms var(--ease-out), visibility 360ms;
+  }
+
+  .preview-card.is-active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .preview-copy {
+    padding: 24px 4px 0;
+  }
+
+  .preview-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.05em;
+  }
+
+  .preview-meta span:first-child {
+    color: var(--accent);
+  }
+
+  .preview-copy h3 {
+    font-family: var(--font-serif-cn);
+    font-size: clamp(28px, 3.4vw, 48px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .preview-copy > p {
+    max-width: 58ch;
+    margin-top: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .preview-specs {
+    display: grid;
+    gap: 0;
+    margin-top: 20px;
+    border-top: 1px solid var(--line-subtle);
+  }
+
+  .preview-specs > div {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 16px;
+    padding-block: 10px;
+    border-bottom: 1px solid var(--line-subtle);
+    font-size: 11px;
+  }
+
+  .preview-specs dt {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+
+  .preview-specs dd {
+    color: var(--text-secondary);
+  }
+
+  .preview-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .preview-facts > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius-md);
+    background: var(--layer-1);
+  }
+
+  .preview-facts strong {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: clamp(20px, 2.4vw, 32px);
+    font-weight: 350;
+    line-height: 1.1;
+  }
+
+  .preview-facts span {
+    color: var(--text-tertiary);
+    font-size: 10px;
+  }
+
+  .case-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .case-link:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 1050px) {
+    .work-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .work-preview {
+      position: relative;
+      top: auto;
+      margin-top: 24px;
+    }
+
+    .work-select {
+      min-height: 128px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .work-select {
+      grid-template-columns: 34px minmax(0, 1fr) 16px;
+      gap: 10px;
+      padding-inline: 4px;
+    }
+
+    .work-num {
+      font-size: 18px;
+    }
+
+    .preview-meta {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .preview-facts {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .preview-card {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-work-showcase]').forEach((root) => {
+    const triggers = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-work-trigger]'));
+    const previews = Array.from(root.querySelectorAll<HTMLElement>('[data-work-preview]'));
+
+    const activate = (index: string | null) => {
+      if (index === null) return;
+      triggers.forEach((trigger) => {
+        const active = trigger.dataset.workIndex === index;
+        trigger.classList.toggle('is-active', active);
+        trigger.setAttribute('aria-pressed', String(active));
+      });
+      previews.forEach((preview) => {
+        const active = preview.dataset.workIndex === index;
+        preview.classList.toggle('is-active', active);
+        preview.setAttribute('aria-hidden', String(!active));
+        preview.inert = !active;
+      });
+    };
+
+    triggers.forEach((trigger) => {
+      const index = trigger.dataset.workIndex ?? null;
+      trigger.addEventListener('pointerenter', () => activate(index));
+      trigger.addEventListener('focus', () => activate(index));
+      trigger.addEventListener('click', () => activate(index));
+    });
+  });
+</script>

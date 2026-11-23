@@ -1,0 +1,72 @@
+.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity var(--dur-enter) var(--ease-out), transform var(--dur-enter) var(--ease-out);
+  transition-delay: calc(var(--reveal-i, 0) * 65ms);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.cursor-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(520px circle at var(--cursor-x, 50vw) var(--cursor-y, 50vh), rgb(183 247 42 / 6%), transparent 70%);
+  mix-blend-mode: screen;
+  transition: opacity var(--dur-hover) var(--ease-out);
+}
+
+.is-pointer-active .cursor-ambient {
+  opacity: 1;
+}
+
+.glare-hover {
+  --hover-x: 50%;
+  --hover-y: 50%;
+  position: relative;
+  isolation: isolate;
+}
+
+.glare-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(260px circle at var(--hover-x) var(--hover-y), rgb(183 247 42 / 10%), transparent 72%);
+  transition: opacity var(--dur-hover) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .glare-hover:hover::after,
+  .glare-hover:focus-visible::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .cursor-ambient {
+    display: none;
+  }
+}

@@ -1,0 +1,179 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { experience, sections, ui } from '../data/site';
+---
+
+<section class="section container experience" aria-labelledby="journey">
+  <SectionHeading id="journey" {...sections.journey} />
+
+  <ol class="timeline" role="list">
+    {experience.map((item, index) => (
+      <li class="timeline-item reveal" style={`--reveal-i:${Math.min(index, 4)}`}>
+        <div class="timeline-period">
+          <span>{item.period}</span>
+          <em>0{experience.length - index}</em>
+        </div>
+        <div class="timeline-marker" aria-hidden="true"><i></i></div>
+        <div class="timeline-content">
+          <div class="timeline-title">
+            <h3>{item.org}</h3>
+            {'pending' in item && item.pending && <span>{ui.labels.pending}</span>}
+          </div>
+          <strong>{item.title}</strong>
+          <p>{item.note}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .timeline {
+    position: relative;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.28fr) 28px minmax(0, 1fr);
+    gap: 24px;
+    min-height: 168px;
+  }
+
+  .timeline-period {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 5px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .timeline-period em {
+    color: var(--text-tertiary);
+    font-size: 10px;
+    font-style: normal;
+  }
+
+  .timeline-marker {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .timeline-marker::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    bottom: 0;
+    width: 1px;
+    background: var(--line-subtle);
+  }
+
+  .timeline-item:last-child .timeline-marker::after {
+    display: none;
+  }
+
+  .timeline-marker i {
+    position: relative;
+    z-index: 1;
+    width: 9px;
+    height: 9px;
+    margin-top: 8px;
+    border: 2px solid var(--canvas);
+    border-radius: 50%;
+    background: var(--text-tertiary);
+    box-shadow: 0 0 0 1px var(--line-strong);
+  }
+
+  .timeline-item:first-child .timeline-marker i {
+    background: var(--accent);
+    box-shadow: 0 0 12px rgb(183 247 42 / 45%);
+  }
+
+  .timeline-content {
+    padding: 0 0 42px 4px;
+    border-bottom: 1px solid var(--line-subtle);
+  }
+
+  .timeline-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .timeline-title h3 {
+    font-size: clamp(21px, 2.2vw, 30px);
+    font-weight: 620;
+    letter-spacing: -0.025em;
+  }
+
+  .timeline-title > span {
+    flex: 0 0 auto;
+    padding: 2px 7px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+  }
+
+  .timeline-content > strong {
+    display: block;
+    margin-top: 8px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .timeline-content p {
+    max-width: 72ch;
+    margin-top: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  @media (max-width: 767px) {
+    .timeline-item {
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .timeline-period {
+      grid-column: 2;
+      grid-row: 1;
+      padding-top: 0;
+    }
+
+    .timeline-period em {
+      display: none;
+    }
+
+    .timeline-marker {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+
+    .timeline-marker i {
+      margin-top: 5px;
+    }
+
+    .timeline-marker::after {
+      top: 14px;
+    }
+
+    .timeline-content {
+      grid-column: 2;
+      padding-bottom: 34px;
+    }
+
+    .timeline-title {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+</style>

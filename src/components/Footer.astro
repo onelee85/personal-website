@@ -1,0 +1,47 @@
+---
+import { identity, ui } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© {year} {identity.name} · {ui.footer.signature}</p>
+    <a href="#main">{ui.actions.backToTop} <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line-subtle);
+  }
+
+  .footer-inner {
+    min-height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .footer-inner a {
+    color: var(--text-secondary);
+  }
+
+  .footer-inner a:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 639px) {
+    .footer-inner {
+      min-height: 120px;
+      align-items: flex-start;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
+</style>

@@ -1,0 +1,197 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { capabilities, sections } from '../data/site';
+const bars = [32, 58, 42, 78, 52, 90, 64];
+---
+
+<section class="section container capabilities" aria-labelledby="focus">
+  <SectionHeading id="focus" {...sections.focus} />
+
+  <ul class="capability-list" role="list">
+    {capabilities.map((item, index) => (
+      <li class="capability-row reveal" style={`--reveal-i:${index}`}>
+        <div class="capability-link glare-hover">
+          <span class="capability-status"><i aria-hidden="true"></i>{item.status}</span>
+          <span class="capability-id">
+            <strong>{item.title}</strong>
+            <span><em>{item.tag}</em>{item.blurb}</span>
+          </span>
+          <span class="capability-bars" aria-hidden="true">
+            {bars.map((height) => <i style={`height:${height}%`}></i>)}
+          </span>
+          <span class="capability-stat">
+            <b>{item.stat}</b>
+            <em>{item.statLabel}</em>
+          </span>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .capability-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .capability-row {
+    border-top: 1px solid var(--line-subtle);
+  }
+
+  .capability-row:last-child {
+    border-bottom: 1px solid var(--line-subtle);
+  }
+
+  .capability-link {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto minmax(180px, auto);
+    align-items: center;
+    gap: clamp(16px, 3vw, 36px);
+    min-height: 116px;
+    padding: 18px 12px;
+    margin-inline: -12px;
+    border-radius: var(--radius-md);
+    transition: background var(--dur-hover) var(--ease-out);
+  }
+
+  .capability-link:hover {
+    background: var(--layer-1);
+  }
+
+  .capability-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+
+  .capability-status i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .capability-id {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .capability-id strong {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 2.8vw, 40px);
+    font-weight: 620;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    transition: color var(--dur-hover) var(--ease-out);
+  }
+
+  .capability-id > span {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+  }
+
+  .capability-id em {
+    flex: 0 0 auto;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-style: normal;
+    letter-spacing: 0.12em;
+    opacity: 0.8;
+  }
+
+  .capability-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 28px;
+  }
+
+  .capability-bars i {
+    width: 3px;
+    background: var(--accent);
+    opacity: 0.24;
+    transform-origin: bottom;
+    animation: equalize 3s var(--ease-out) infinite alternate;
+  }
+
+  .capability-bars i:nth-child(2n) { animation-delay: 160ms; }
+  .capability-bars i:nth-child(3n) { animation-delay: 320ms; }
+
+  .capability-stat {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 5px;
+    text-align: right;
+  }
+
+  .capability-stat b {
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: clamp(24px, 3vw, 44px);
+    font-weight: 300;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .capability-stat em {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-style: normal;
+    letter-spacing: 0.05em;
+  }
+
+  .capability-link:hover .capability-id strong,
+  .capability-link:hover .capability-stat b {
+    color: var(--accent);
+  }
+
+  .capability-link:hover .capability-bars i {
+    opacity: 0.8;
+  }
+
+  @keyframes equalize {
+    to { transform: scaleY(0.6); }
+  }
+
+  @media (max-width: 980px) {
+    .capability-link {
+      grid-template-columns: 64px minmax(0, 1fr) minmax(150px, auto);
+    }
+
+    .capability-bars {
+      display: none;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .capability-link {
+      grid-template-columns: 1fr auto;
+      grid-template-areas: 'status status' 'id stat';
+      gap: 14px;
+      min-height: 0;
+      padding-block: 24px;
+    }
+
+    .capability-status { grid-area: status; }
+    .capability-id { grid-area: id; }
+    .capability-stat { grid-area: stat; align-self: end; }
+    .capability-id > span { align-items: flex-start; flex-direction: column; gap: 4px; }
+    .capability-stat b { font-size: 23px; }
+    .capability-stat em { max-width: 120px; line-height: 1.5; }
+  }
+</style>

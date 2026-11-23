@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { seo, ui } from '../data/site';
+---
+
+<BaseLayout title={seo.notFoundTitle}>
+  <section class="container not-found">
+    <span class="eyebrow">{ui.notFound.eyebrow}</span>
+    <h1>{ui.notFound.titleLines[0]}<br />{ui.notFound.titleLines[1]}</h1>
+    <p>{ui.notFound.description}</p>
+    <a class="btn" href="/">{ui.actions.backHome} <span aria-hidden="true">↗</span></a>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 82svh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    padding-top: 100px;
+  }
+
+  h1 {
+    margin-top: 24px;
+    font-family: var(--font-serif-cn);
+    font-size: var(--fs-display);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+  }
+
+  p {
+    margin-top: 24px;
+    color: var(--text-secondary);
+  }
+
+  .btn {
+    margin-top: 32px;
+  }
+</style>
