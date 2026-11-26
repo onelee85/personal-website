@@ -32,7 +32,7 @@ const { projects } = Astro.props;
 
       <div class="hero-actions">
         <a class="btn" href="#work">{ui.actions.viewProjects} <span aria-hidden="true">↓</span></a>
-        <a class="btn btn--ghost" href="#journey">{ui.actions.viewJourney}</a>
+        <a class="btn btn--ghost" href="/resume/">{ui.actions.viewResume}</a>
       </div>
 
       <div class="hero-proof" aria-label={ui.a11y.careerOverview}>
@@ -46,7 +46,7 @@ const { projects } = Astro.props;
           <span class="project-pair">
             {index > 0 && <span class="project-arrow" aria-hidden="true">→</span>}
             <a href={`#work-${project.id}`} class="glare-hover">
-              <span>0{project.data.order}</span>{project.data.title}
+              <span>{String(index + 1).padStart(2, '0')}</span>{project.data.title}
             </a>
           </span>
         ))}
@@ -429,6 +429,7 @@ const { projects } = Astro.props;
     }
 
     .hero-thesis {
+      font-size: clamp(30px, 8.2vw, 38px);
       letter-spacing: -0.03em;
     }
 

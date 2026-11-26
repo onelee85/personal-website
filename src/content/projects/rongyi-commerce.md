@@ -3,10 +3,20 @@ title: 容易网电商
 tagline: B2B2C 商城、商家自助平台与线下商场导购
 summary: 容易网为消费者提供线上商城和商场导购服务，为商家提供商品、交易和营销管理后台。我带队上线 B2B2C 商城和商家自助管理平台，随后负责“容易逛”产品线，组织开发移动 App 和商场导购机使用的接口。
 order: 4
+featured: true
 period: 2012 年商城上线
 role: 技术经理
 domain: 电商 / O2O / 商场导购
 status: 电商平台项目
+capabilities:
+  - id: business
+    evidence: 围绕会员、商品、交易、营销、仓储与配送组织商城和商家后台建设。
+  - id: product
+    evidence: 参与需求分析和原型设计，制定开发计划并协调研发资源。
+  - id: experience
+    evidence: 参与原型与多终端产品协作，作为交互设计的相关经历，不宣称独立视觉设计成果。
+  - id: architecture
+    evidence: 参与 Java 核心模块开发，并负责数据库和接入层性能调优。
 stack: [Java, Spring, iBATIS, MySQL, Nginx]
 ---
 

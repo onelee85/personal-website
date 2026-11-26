@@ -1,197 +1,187 @@
 ---
 import SectionHeading from './SectionHeading.astro';
 import { capabilities, sections } from '../data/site';
-const bars = [32, 58, 42, 78, 52, 90, 64];
 ---
 
 <section class="section container capabilities" aria-labelledby="focus">
   <SectionHeading id="focus" {...sections.focus} />
 
-  <ul class="capability-list" role="list">
+  <ul class="capability-grid" role="list">
     {capabilities.map((item, index) => (
-      <li class="capability-row reveal" style={`--reveal-i:${index}`}>
-        <div class="capability-link glare-hover">
-          <span class="capability-status"><i aria-hidden="true"></i>{item.status}</span>
-          <span class="capability-id">
-            <strong>{item.title}</strong>
-            <span><em>{item.tag}</em>{item.blurb}</span>
-          </span>
-          <span class="capability-bars" aria-hidden="true">
-            {bars.map((height) => <i style={`height:${height}%`}></i>)}
-          </span>
-          <span class="capability-stat">
-            <b>{item.stat}</b>
-            <em>{item.statLabel}</em>
-          </span>
-        </div>
+      <li id={`focus-${item.id}`} class="capability-item reveal" style={`--reveal-i:${index % 4}`}>
+        <article class="capability-card">
+          <div class="capability-meta">
+            <span>{item.index}</span>
+            <strong class:list={[`status--${item.tone}`]}>{item.status}</strong>
+          </div>
+          <div class="capability-title">
+            <h3>{item.title}</h3>
+            <span>{item.english}</span>
+          </div>
+          <p>{item.blurb}</p>
+          <div class="capability-evidence">
+            <span>{item.evidenceLabel}</span>
+            <ul role="list">
+              {item.evidence.map((project) => (
+                <li><a href={project.href}>{project.label}<span aria-hidden="true"> ↗</span></a></li>
+              ))}
+            </ul>
+          </div>
+        </article>
       </li>
     ))}
   </ul>
 </section>
 
 <style>
-  .capability-list {
-    display: flex;
-    flex-direction: column;
+  .capability-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 
-  .capability-row {
+  .capability-item {
+    min-width: 0;
+    scroll-margin-top: 108px;
+  }
+
+  .capability-card {
+    display: flex;
+    min-height: 236px;
+    height: 100%;
+    flex-direction: column;
+    padding: clamp(18px, 2vw, 24px);
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--layer-1);
+    transition: border-color var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out);
+  }
+
+  .capability-card:hover {
+    border-color: var(--accent-border);
+    background: var(--surface-1);
+  }
+
+  .capability-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .capability-meta > span {
+    color: var(--accent);
+  }
+
+  .capability-meta strong {
+    padding: 4px 8px;
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .status--proven {
+    color: var(--accent);
+  }
+
+  .status--building {
+    color: var(--text-secondary);
+  }
+
+  .capability-title {
+    margin-top: 20px;
+  }
+
+  .capability-title h3 {
+    font-family: var(--font-serif-cn);
+    font-size: clamp(23px, 2.2vw, 30px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  .capability-title > span {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .capability-card > p {
+    margin-top: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .capability-evidence {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 16px;
     border-top: 1px solid var(--line-subtle);
   }
 
-  .capability-row:last-child {
-    border-bottom: 1px solid var(--line-subtle);
-  }
-
-  .capability-link {
-    display: grid;
-    grid-template-columns: 72px minmax(0, 1fr) auto minmax(180px, auto);
-    align-items: center;
-    gap: clamp(16px, 3vw, 36px);
-    min-height: 116px;
-    padding: 18px 12px;
-    margin-inline: -12px;
-    border-radius: var(--radius-md);
-    transition: background var(--dur-hover) var(--ease-out);
-  }
-
-  .capability-link:hover {
-    background: var(--layer-1);
-  }
-
-  .capability-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
+  .capability-evidence > span {
+    padding-top: 11px;
     color: var(--text-tertiary);
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.1em;
-  }
-
-  .capability-status i {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
-  }
-
-  .capability-id {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .capability-id strong {
-    font-family: var(--font-display);
-    font-size: clamp(24px, 2.8vw, 40px);
-    font-weight: 620;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
-    transition: color var(--dur-hover) var(--ease-out);
-  }
-
-  .capability-id > span {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    color: var(--text-tertiary);
-    font-size: 12px;
-  }
-
-  .capability-id em {
-    flex: 0 0 auto;
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-style: normal;
-    letter-spacing: 0.12em;
-    opacity: 0.8;
-  }
-
-  .capability-bars {
-    display: flex;
-    align-items: flex-end;
-    gap: 3px;
-    height: 28px;
-  }
-
-  .capability-bars i {
-    width: 3px;
-    background: var(--accent);
-    opacity: 0.24;
-    transform-origin: bottom;
-    animation: equalize 3s var(--ease-out) infinite alternate;
-  }
-
-  .capability-bars i:nth-child(2n) { animation-delay: 160ms; }
-  .capability-bars i:nth-child(3n) { animation-delay: 320ms; }
-
-  .capability-stat {
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
-    gap: 5px;
-    text-align: right;
-  }
-
-  .capability-stat b {
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: clamp(24px, 3vw, 44px);
-    font-weight: 300;
-    letter-spacing: -0.045em;
-    line-height: 1;
+    font-size: 11px;
     white-space: nowrap;
   }
 
-  .capability-stat em {
-    color: var(--text-tertiary);
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-style: normal;
-    letter-spacing: 0.05em;
+  .capability-evidence ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px 12px;
   }
 
-  .capability-link:hover .capability-id strong,
-  .capability-link:hover .capability-stat b {
+  .capability-evidence a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    color: var(--text-primary);
+    font-size: 12px;
+  }
+
+  .capability-evidence a:hover {
     color: var(--accent);
   }
 
-  .capability-link:hover .capability-bars i {
-    opacity: 0.8;
-  }
-
-  @keyframes equalize {
-    to { transform: scaleY(0.6); }
-  }
-
-  @media (max-width: 980px) {
-    .capability-link {
-      grid-template-columns: 64px minmax(0, 1fr) minmax(150px, auto);
+  @media (max-width: 760px) {
+    .capability-grid {
+      grid-template-columns: 1fr;
     }
 
-    .capability-bars {
-      display: none;
-    }
-  }
-
-  @media (max-width: 639px) {
-    .capability-link {
-      grid-template-columns: 1fr auto;
-      grid-template-areas: 'status status' 'id stat';
-      gap: 14px;
+    .capability-card {
       min-height: 0;
-      padding-block: 24px;
     }
 
-    .capability-status { grid-area: status; }
-    .capability-id { grid-area: id; }
-    .capability-stat { grid-area: stat; align-self: end; }
-    .capability-id > span { align-items: flex-start; flex-direction: column; gap: 4px; }
-    .capability-stat b { font-size: 23px; }
-    .capability-stat em { max-width: 120px; line-height: 1.5; }
+    .capability-evidence {
+      margin-top: 20px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .capability-evidence {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
+    .capability-evidence > span {
+      padding-top: 0;
+    }
+
+    .capability-evidence ul {
+      justify-content: flex-start;
+    }
   }
 </style>

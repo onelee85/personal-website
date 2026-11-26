@@ -2,6 +2,18 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const explanation = z.object({ label: z.string(), detail: z.string() });
+const capabilityId = z.enum([
+  'business',
+  'product',
+  'experience',
+  'architecture',
+  'fullstack',
+  'quality',
+  'devops',
+  'growth',
+  'ai-application',
+  'ai-collaboration',
+]);
 const roadmap = z.object({
   headline: z.tuple([z.string(), z.string(), z.string()]),
   figureCaption: z.string(),
@@ -50,6 +62,10 @@ const projects = defineCollection({
     decisions: z.array(z.object({
       title: z.string(),
       description: z.string(),
+    })).default([]),
+    capabilities: z.array(z.object({
+      id: capabilityId,
+      evidence: z.string(),
     })).default([]),
   }),
 });

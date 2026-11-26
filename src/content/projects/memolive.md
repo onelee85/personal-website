@@ -6,12 +6,19 @@ order: 1
 period: 么么直播 · 2014.06 — 2024.03
 role: 么么直播技术负责人
 domain: 直播 / 实时互动 / 礼物交易
-status: 真实项目 · 指标口径持续补证
+status: 真实项目 · 技术与组织案例
+capabilities:
+  - id: architecture
+    evidence: 负责核心模块研发与高可用架构设计，围绕入口分路、缓存和消息解耦推进平台演进。
+  - id: quality
+    evidence: 负责项目计划、资源分配与质量，将业务需求、里程碑和发布质量纳入同一交付过程。
+  - id: devops
+    evidence: 架构材料覆盖 Kubernetes、发布与监控体系，本人职责与平台图示分别按证据边界呈现。
 theme: live
 facts:
   - value: 约 80 人
     label: 么么直播项目协作规模
-    note: 项目团队包含跨职能协作成员及我的直属团队。不同阶段的人员构成仍待核实。
+    note: 项目团队包含跨职能协作成员及我的直属团队；80 人不是直属团队人数。
   - value: 30 人
     label: 我的直属团队
     note: 属于上述项目团队，与星艾工程效能案例采用同一组织口径。
@@ -55,8 +62,8 @@ roadmap:
       components:
         - label: Redis / Caffeine
           detail: 平台用共享缓存与进程内缓存承接房间、礼物配置和用户信息等热点读。
-        - label: MongoDB / MySQL
-          detail: 成熟期的数据存储包括 MongoDB 副本集和 MySQL 主从。
+        - label: MongoDB
+          detail: 直播业务的主要数据存储采用 MongoDB，成熟期以副本集部署。
         - label: RabbitMQ
           detail: 缓冲送礼后的业务事件，由后台消费者更新排行榜和活动。
   flows:
@@ -100,12 +107,12 @@ roadmap:
       firstYear: 2015
       lastYear: 2016
       title: 给数据存储增加副本
-      detail: 随着用户增长，团队引入 MongoDB 副本集，并为 Redis 配置主从。各组件的具体节点数和切换耗时仍缺少可公开的记录。
+      detail: 随着用户增长，团队引入 MongoDB 副本集，并为 Redis 配置主从，逐步完善数据层的高可用结构。
     - label: 平台成熟期
       firstYear: 2017
       lastYear: 2023
       title: 从服务部署到调用链，都有工具可查
-      detail: 团队用 Kubernetes 部署服务，Nacos 管理服务与配置，Caffeine 承接本地热点读。我用 SkyWalking 追踪调用链并定位瓶颈。这里按阶段列出实际使用的组件，具体引入年份仍待核实。
+      detail: 团队用 Kubernetes 部署服务，Nacos 管理服务与配置，Caffeine 承接本地热点读。我用 SkyWalking 追踪调用链并定位瓶颈。这里按阶段呈现成熟期实际使用的组件。
 ---
 ## 我的交付职责
 
@@ -115,4 +122,4 @@ roadmap:
 
 ## 指标口径
 
-系统分层和三条请求路径依据成熟期架构记录整理。历史并发量、首屏耗时和可用性还缺少可核对的统计窗口或测量方式，送礼时多项余额更新的事务边界也待核实。
+系统分层和三条请求路径依据成熟期架构记录整理。图中用于说明系统结构与本人职责，不展示缺少统一统计口径的历史并发、首屏耗时与可用性数字。

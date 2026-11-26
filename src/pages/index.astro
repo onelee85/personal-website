@@ -2,6 +2,7 @@
 import { getFeaturedProjects } from '../lib/projects';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import DeliveryModel from '../components/DeliveryModel.astro';
 import CapabilityBoard from '../components/CapabilityBoard.astro';
 import WorkShowcase from '../components/WorkShowcase.astro';
 import Experience from '../components/Experience.astro';
@@ -14,6 +15,7 @@ const projects = await getFeaturedProjects();
 
 <BaseLayout description={seo.homeDescription}>
   <Hero projects={projects} />
+  <DeliveryModel />
   <CapabilityBoard />
   <WorkShowcase projects={projects} />
   <Experience />

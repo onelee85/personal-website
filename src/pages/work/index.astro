@@ -1,0 +1,220 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllProjects } from '../../lib/projects';
+import { capabilities } from '../../data/site';
+
+const projects = await getAllProjects();
+const capabilityTitles = new Map(capabilities.map((item) => [item.id, item.title] as const));
+---
+
+<BaseLayout title="全部项目" description="李皎的真实项目案例与核心能力证据，覆盖直播、社交、音乐、电商、企业软件、工程效能与 AI 协同研发。">
+  <main class="container work-index">
+    <a class="back-link" href="/#work"><span aria-hidden="true">←</span> 返回首页项目记录</a>
+    <header class="index-header">
+      <span class="eyebrow">Project archive / Capability evidence</span>
+      <h1>全部项目</h1>
+      <p>首页保留五个精选案例，这里完整收录七个真实项目。能力标签只表示该项目能够支撑的经验，不代表每个项目都覆盖完整生命周期。</p>
+    </header>
+
+    <ol class="project-list" role="list">
+      {projects.map((project) => (
+        <li>
+          <article class="project-row">
+            <span class="project-number">{String(project.data.order).padStart(2, '0')}</span>
+            <div class="project-main">
+              <div class="project-title-line">
+                <h2><a href={`/work/${project.id}/`}>{project.data.title}</a></h2>
+                {project.data.featured && <span>首页精选</span>}
+              </div>
+              <p class="project-tagline">{project.data.tagline}</p>
+              <p class="project-summary">{project.data.summary}</p>
+              {project.data.capabilities.length > 0 && (
+                <ul class="project-capabilities" role="list" aria-label={`${project.data.title}关联能力`}>
+                  {project.data.capabilities.map((item) => <li>{capabilityTitles.get(item.id)}</li>)}
+                </ul>
+              )}
+            </div>
+            <div class="project-meta">
+              <span>{project.data.domain}</span>
+              <a href={`/work/${project.id}/`}>查看案例 <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
+  </main>
+</BaseLayout>
+
+<style>
+  .work-index {
+    padding-top: clamp(140px, 16vw, 210px);
+    padding-bottom: var(--section-gap);
+  }
+
+  .back-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .index-header {
+    max-width: 900px;
+    margin-top: clamp(44px, 7vw, 88px);
+    padding-bottom: clamp(44px, 7vw, 80px);
+  }
+
+  .index-header h1 {
+    margin-top: 20px;
+    font-family: var(--font-serif-cn);
+    font-size: var(--fs-display);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+  }
+
+  .index-header p {
+    max-width: 62ch;
+    margin-top: 24px;
+    color: var(--text-secondary);
+    font-size: var(--fs-lead);
+    line-height: 1.8;
+  }
+
+  .project-list {
+    border-top: 1px solid var(--line-subtle);
+  }
+
+  .project-list > li {
+    border-bottom: 1px solid var(--line-subtle);
+  }
+
+  .project-row {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) minmax(170px, 0.25fr);
+    gap: clamp(20px, 4vw, 56px);
+    padding-block: clamp(32px, 5vw, 64px);
+  }
+
+  .project-number {
+    padding-top: 7px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 300;
+  }
+
+  .project-title-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .project-title-line h2 {
+    font-family: var(--font-serif-cn);
+    font-size: clamp(28px, 3.6vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .project-title-line h2 a:hover {
+    color: var(--accent);
+  }
+
+  .project-title-line > span {
+    padding: 4px 7px;
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    font-size: 11px;
+  }
+
+  .project-tagline {
+    margin-top: 10px;
+    color: var(--text-primary);
+    font-size: 15px;
+  }
+
+  .project-summary {
+    max-width: 68ch;
+    margin-top: 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  .project-capabilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .project-capabilities li {
+    padding: 5px 8px;
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 11px;
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 8px;
+  }
+
+  .project-meta > span {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  .project-meta a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .project-meta a:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 820px) {
+    .project-row {
+      grid-template-columns: 40px minmax(0, 1fr);
+    }
+
+    .project-meta {
+      grid-column: 2;
+      gap: 10px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .project-row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .project-number,
+    .project-meta {
+      grid-column: 1;
+    }
+
+    .project-number {
+      font-size: 14px;
+    }
+  }
+</style>

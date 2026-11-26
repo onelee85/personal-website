@@ -1,10 +1,12 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
-import { getFeaturedProjects } from '../../lib/projects';
+import { getAllProjects } from '../../lib/projects';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
 import LiveRoadmap from '../../components/roadmap/LiveRoadmap.astro';
-import { ui } from '../../data/site';
+import { capabilities, ui } from '../../data/site';
+
+const capabilityDefinitions = new Map(capabilities.map((item) => [item.id, item] as const));
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -20,7 +22,7 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const projects = await getFeaturedProjects();
+const projects = await getAllProjects();
 const currentIndex = projects.findIndex((item) => item.id === project.id);
 const nextProject = projects[(currentIndex + 1) % projects.length];
 ---
@@ -81,6 +83,31 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
           </section>
         )}
 
+        {project.data.capabilities.length > 0 && (
+          <section class="case-capabilities reveal" aria-labelledby="capabilities-title">
+            <div class="case-section-meta">
+              <span class="eyebrow">{ui.case.capabilitiesEyebrow}</span>
+              <span>{ui.case.capabilitiesIndex}</span>
+            </div>
+            <h2 id="capabilities-title">{ui.case.capabilitiesTitle}</h2>
+            <p class="capability-note">{ui.case.capabilitiesNote}</p>
+            <ol role="list">
+              {project.data.capabilities.map((item) => {
+                const capability = capabilityDefinitions.get(item.id);
+                return capability && (
+                  <li>
+                    <a href={`/#focus-${capability.id}`}>
+                      <span>{capability.index}</span>
+                      <strong>{capability.title}</strong>
+                    </a>
+                    <p>{item.evidence}</p>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        )}
+
         {project.data.decisions.length > 0 && (
           <section class="case-decisions reveal" aria-labelledby="decisions-title">
             <div class="case-section-meta">
@@ -106,7 +133,7 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
     </div>
 
     <nav class="container case-bottom" aria-label={ui.a11y.caseNavigation}>
-      <a href="/#work"><span aria-hidden="true">←</span> {ui.actions.allProjects}</a>
+      <a href="/work/"><span aria-hidden="true">←</span> {ui.actions.allProjects}</a>
       <a href={`/work/${nextProject.id}/`}>
         <span><small>{ui.labels.nextCase}</small>{nextProject.data.title}</span><span aria-hidden="true">↗</span>
       </a>
@@ -295,6 +322,55 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
     font-size: 12px;
   }
 
+  .capability-note {
+    margin-top: 16px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+  }
+
+  .case-capabilities ol {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .case-capabilities li {
+    padding: 20px;
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius-md);
+    background: var(--layer-1);
+  }
+
+  .case-capabilities a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .case-capabilities a span {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .case-capabilities a strong {
+    font-size: 15px;
+    font-weight: 550;
+  }
+
+  .case-capabilities a:hover strong {
+    color: var(--accent);
+  }
+
+  .case-capabilities li > p {
+    margin-top: 10px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
   .case-decisions ol {
     margin-top: 24px;
   }
@@ -423,7 +499,8 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
     }
 
     .case-meta,
-    .fact-grid {
+    .fact-grid,
+    .case-capabilities ol {
       grid-template-columns: 1fr;
     }
 

@@ -1,18 +1,18 @@
-// 网站公开内容的单一来源。待确认任职信息在公开前补充。
+// 网站公开内容的单一来源。职业事实以公开简历与案例口径为准。
 export const identity = {
   name: '李皎',
   mark: 'LI JIAO',
-  roleTag: 'TECH LEAD / ARCHITECT',
-  roleEn: 'Engineering leader, architect & AI practitioner',
-  roleZh: '技术负责人、系统架构与 AI 应用实践',
+  roleTag: 'TECH LEAD / R&D DIRECTOR',
+  roleEn: 'Engineering leadership, architecture & AI-augmented delivery',
+  roleZh: '技术负责人 / 研发总监 · 系统架构 · AI 协同研发',
   basedIn: '上海',
   status: 'OPEN TO NEW OPPORTUNITIES',
   startYear: '2007',
 } as const;
 
 export const hero = {
-  thesis: ['你好，我是李皎', '让复杂业务，长成可靠系统'],
-  lead: '18+ 年互联网研发与架构经验，穿过直播、社交、电商、音乐与企业软件。关注核心链路、平台演进和团队交付，也在把 LLM API 与 RAG 带进真实业务场景。',
+  thesis: ['你好 我是李皎', '从 0 到 1 构建产品', '从 1 到 N 持续创造价值', '以 AI 为生产力'],
+  lead: '18+ 年互联网研发、架构与技术管理经验。曾负责约 80 人项目协作与 30 人直属团队；近期在精简团队下基本独立承担直播平台架构、前后端与生产运维，并以 AI 辅助真实研发。',
 } as const;
 
 export const nav = [
@@ -20,51 +20,136 @@ export const nav = [
   { label: '项目案例', href: '#work' },
   { label: '职业经历', href: '#journey' },
   { label: '工作方法', href: '#about' },
+  { label: '简历', href: '/resume/' },
   { label: 'Blog', href: '/blog/' },
   { label: '联系我', href: '#contact' },
 ] as const;
 
+export const aiTracks = [
+  {
+    code: '01 / BUILD WITH AI',
+    title: 'AI 原生软件研发',
+    status: '真实研发实践 · 治理建设中',
+    description: '将 AI 融入分析、设计、研发与验证，通过明确目标、上下文和工程约束组织协作。AI 已辅助真实直播平台研发，工程师始终负责方案取舍、关键实现与交付结果。',
+  },
+  {
+    code: '02 / BUILD AI PRODUCTS',
+    title: 'AI 应用工程',
+    status: 'LLM / RAG 内部试点',
+    description: '围绕主播、客服与运营场景进行 LLM API 和 RAG 试点，未面向真实业务上线。根据问题选择确定性程序、工作流或模型能力，不为使用 AI 而使用 AI。',
+  },
+] as const;
+
+export const lifecycle = [
+  { index: '01', label: '需求发现', english: 'DISCOVER' },
+  { index: '02', label: '产品规划', english: 'DEFINE' },
+  { index: '03', label: '体验设计', english: 'DESIGN' },
+  { index: '04', label: '架构设计', english: 'ARCHITECT' },
+  { index: '05', label: '全栈研发', english: 'BUILD' },
+  { index: '06', label: '质量验证', english: 'VERIFY' },
+  { index: '07', label: '发布运维', english: 'OPERATE' },
+  { index: '08', label: '运营迭代', english: 'EVOLVE' },
+] as const;
+
+export const futureDirections = ['Agent 产品化', 'AI Evals / LLMOps', '多 Agent 编排', '规格驱动研发与效能度量'] as const;
+
 export const capabilities = [
   {
-    status: 'ARCH',
-    tag: 'SYSTEM',
-    title: '高并发与平台架构',
-    blurb: '微服务、缓存、消息队列、服务发现与可观测性',
-    stat: '18+',
-    statLabel: '年研发与架构经验',
+    id: 'business', index: '01', status: '已有实践', tone: 'proven',
+    title: '业务与商业分析', english: 'Business & Commercial Thinking',
+    blurb: '识别真实需求，评估业务价值与投入产出。',
+    evidenceLabel: '项目证据',
+    evidence: [
+      { label: '社交平台', href: '/work/social-product/' },
+      { label: '容易网电商', href: '/work/rongyi-commerce/' },
+    ],
   },
   {
-    status: 'LEAD',
-    tag: 'DELIVERY',
-    title: '技术团队与复杂交付',
-    blurb: '技术决策、跨部门协作、质量与持续交付',
-    stat: '80 / 30',
-    statLabel: '项目协作 / 直属团队',
+    id: 'product', index: '02', status: '已有实践', tone: 'proven',
+    title: '产品规划与设计', english: 'Product Planning & Design',
+    blurb: '从业务构想到产品规格、用户路径与验收边界。',
+    evidenceLabel: '项目证据',
+    evidence: [
+      { label: '社交平台', href: '/work/social-product/' },
+      { label: '容易网电商', href: '/work/rongyi-commerce/' },
+    ],
   },
   {
-    status: 'BUILD',
-    tag: 'BUSINESS',
-    title: '核心链路与业务系统',
-    blurb: '直播互动、资产交易、电商、WMS / TMS',
-    stat: '0 → 1',
-    statLabel: '产品、平台与持续演进',
+    id: 'experience', index: '03', status: '正在建设', tone: 'building',
+    title: 'UI/UX 与交互设计', english: 'UI/UX & Interaction Design',
+    blurb: '具备原型与多端协作基础，持续建设体验设计与视觉验收能力。',
+    evidenceLabel: '相关经历',
+    evidence: [
+      { label: '社交平台', href: '/work/social-product/' },
+      { label: '容易网电商', href: '/work/rongyi-commerce/' },
+    ],
   },
   {
-    status: 'AI',
-    tag: 'APPLICATION',
-    title: '企业 AI 应用实践',
-    blurb: '主播自动回复 LLM API、客服与运营 RAG',
-    stat: 'API + RAG',
-    statLabel: '使用范围与效果持续补证',
+    id: 'architecture', index: '04', status: '核心优势', tone: 'proven',
+    title: '系统架构与技术设计', english: 'Software Architecture & Technical Design',
+    blurb: '权衡复杂度、成本、性能与系统稳定性。',
+    evidenceLabel: '项目证据',
+    evidence: [
+      { label: '么么直播', href: '/work/memolive/' },
+      { label: '匿名直播平台', href: '/work/anonymous-live/' },
+    ],
+  },
+  {
+    id: 'fullstack', index: '05', status: '已有实践', tone: 'proven',
+    title: '全栈软件研发', english: 'Full Stack Engineering',
+    blurb: '贯通前端、后端、数据层与第三方服务。',
+    evidenceLabel: '项目证据',
+    evidence: [{ label: '匿名直播平台', href: '/work/anonymous-live/' }],
+  },
+  {
+    id: 'quality', index: '06', status: '已有实践', tone: 'proven',
+    title: '测试与质量保障', english: 'Quality Engineering',
+    blurb: '建立自动化验证与可复查的质量门禁。',
+    evidenceLabel: '项目证据',
+    evidence: [
+      { label: '星艾工程效能', href: '/work/engineering-system/' },
+      { label: '社交平台', href: '/work/social-product/' },
+    ],
+  },
+  {
+    id: 'devops', index: '07', status: '核心优势', tone: 'proven',
+    title: '部署与生产运维', english: 'DevOps & Site Reliability Engineering',
+    blurb: '保障软件可靠发布、稳定运行与故障恢复。',
+    evidenceLabel: '项目证据',
+    evidence: [
+      { label: '匿名直播平台', href: '/work/anonymous-live/' },
+      { label: '么么直播', href: '/work/memolive/' },
+    ],
+  },
+  {
+    id: 'growth', index: '08', status: '正在建设', tone: 'building',
+    title: '数据运营与产品迭代', english: 'Data Analytics & Product Growth',
+    blurb: '从运营与经营反馈出发，持续建设数据分析与实验验证能力。',
+    evidenceLabel: '运营实践',
+    evidence: [{ label: '社交平台', href: '/work/social-product/' }],
+  },
+  {
+    id: 'ai-application', index: '09', status: '内部试点', tone: 'building',
+    title: 'AI 应用工程', english: 'AI Application Engineering',
+    blurb: '将 LLM 与 RAG 转化为可验证的业务功能试点，未宣称生产上线。',
+    evidenceLabel: '内部试点',
+    evidence: [{ label: '匿名直播平台', href: '/work/anonymous-live/' }],
+  },
+  {
+    id: 'ai-collaboration', index: '10', status: '实践与建设并行', tone: 'building',
+    title: 'AI 协同研发与治理', english: 'AI Native Software Engineering & Governance',
+    blurb: '以 AI 辅助真实研发，持续沉淀可复用、可验证的人机协同流程。',
+    evidenceLabel: '真实研发',
+    evidence: [{ label: '匿名直播平台', href: '/work/anonymous-live/' }],
   },
 ] as const;
 
 export const experience = [
   {
-    period: '近期',
+    period: '2025.06 入职 · 2026.09 后转长期技术服务合作',
     org: '上海顺天浩网络科技有限公司',
-    title: '全栈与平台架构',
-    note: '负责后端、前端、部署运维与监控，并推进 LLM API、RAG 与 AI 辅助研发。正式职称与任职分段待确认。',
+    title: '实际技术负责人',
+    note: '负责研发团队管理及直播平台技术；2025 年底团队人员变化后，基本独立承担架构、前后端、服务器与运维，并通过 AI 辅助完成跨岗位研发任务。目前为长期技术服务合作。',
   },
   {
     period: '2024.04 — 2025.06',
@@ -137,23 +222,21 @@ export const skillGroups = [
   },
   {
     label: 'AI PRACTICE',
-    items: ['LLM API', 'RAG', 'Claude Code', 'Cursor', 'Human review', 'CI/CD quality gates'],
+    items: ['LLM API / RAG 内部试点', 'Vibe Coding', 'Codex / OpenCode', 'Human review', 'CI/CD quality gates'],
   },
 ] as const;
 
 export const targetRoles = [
-  'AI Agent',
-  '全栈开发',
-  '技术负责人',
-  '研发总监',
-  '后端开发',
+  '技术负责人 / 研发总监',
+  '系统架构 / 全栈交付',
+  'AI Native 研发负责人',
 ] as const;
 
 export const contact = {
   eyebrow: 'Contact / Next conversation',
   panelLabel: 'PUBLIC CONTACT',
-  headline: '如果你正在解决复杂系统、技术团队或 AI 应用落地的问题，我们可以聊聊。',
-  note: '以下是可直接使用的公开联系方式。关于工作机会、项目合作或工程问题，都欢迎来信。',
+  headline: '如果你正在寻找技术负责人，或需要解决复杂系统与团队交付问题，我们可以聊聊。',
+  note: '可查看公开职业简历，或通过以下方式联系。工作机会、项目合作与工程问题都欢迎沟通。',
   panelTitle: '欢迎联系',
   channelsAria: '公开联系方式',
   channels: [
@@ -161,35 +244,42 @@ export const contact = {
     { label: 'GITHUB', value: 'github.com/onelee85', href: 'https://github.com/onelee85/', external: true },
     { label: 'WECHAT', value: 'onelee85', href: '', external: false },
   ],
-  marquee: 'ARCHITECTURE · ENGINEERING LEADERSHIP · AI APPLICATION · SHANGHAI · BUILD WITH EVIDENCE · ',
+  marquee: 'ENGINEERING LEADERSHIP · ARCHITECTURE · AI-AUGMENTED DELIVERY · SHANGHAI · ',
 } as const;
 
 export const seo = {
-  homeDescription: '李皎的个人网站：18+ 年互联网研发与架构经验，关注技术领导、复杂系统、团队交付与 AI 应用实践。',
+  homeDescription: '李皎的个人网站：技术负责人 / 研发总监，18+ 年研发、架构与技术管理经验，覆盖复杂系统、团队交付、全栈研发与 AI 协同研发。',
   notFoundTitle: '页面未找到',
 } as const;
 
 export const sections = {
-  focus: {
-    eyebrow: 'Engineering coordinates',
+  model: {
+    eyebrow: 'AI native delivery model',
     index: 'S / 01',
-    title: '工程坐标',
-    description: '不把技能写成进度条。这里展示的是经验所在的真实业务、系统与组织语境。',
+    title: '两条主线，一个交付闭环',
+    description: 'Build with AI 改变研发方式，Build AI Products 解决业务问题；两者都以真实场景和可验证结果为边界。',
+  },
+  focus: {
+    eyebrow: 'Capability system / Evidence linked',
+    index: 'S / 02',
+    title: '十大核心能力',
+    description: '不是技能进度条。每项能力都标明当前阶段，并链接到能够支撑它的真实项目或相关经历。',
   },
   work: {
     eyebrow: 'Selected work / Evidence based',
-    index: 'S / 02',
+    index: 'S / 03',
     title: '项目记录',
+    description: '保留完整项目概要，用本人职责、关键决策和已核实成果说明能力如何落到交付。',
   },
   journey: {
     eyebrow: 'Experience / 2007 — Now',
-    index: 'S / 03',
+    index: 'S / 04',
     title: '职业路径',
-    description: '从核心开发、架构到技术管理，再到小团队全栈交付与 AI 应用实践。不同资源条件，关注同一个交付结果。',
+    description: '从核心开发、架构到技术管理，再到小团队全栈交付与 AI 协同研发。不同资源条件，关注同一个交付结果。',
   },
   about: {
     eyebrow: 'How I work',
-    index: 'S / 04',
+    index: 'S / 05',
     title: '工作方法',
   },
 } as const;
@@ -213,6 +303,7 @@ export const ui = {
   actions: {
     viewProjects: '查看代表项目',
     viewJourney: '职业路径',
+    viewResume: '查看 / 保存简历',
     readCase: '查看项目详情',
     backToWork: '返回项目集',
     allProjects: '全部项目',
@@ -233,33 +324,33 @@ export const ui = {
     sinceLabel: 'Since',
     proofs: [
       { value: '18+', label: '年研发与架构' },
-      { value: '80 / 30', label: '项目协作 / 直属团队' },
-      { value: 'LLM + RAG', label: '企业场景实践' },
+      { value: '约 80 人', label: '项目协作规模' },
+      { value: '30 人', label: '直属团队' },
     ],
     systemCard: {
-      eyebrow: 'OPERATING SYSTEM',
-      version: 'V.01',
-      coreTitle: 'BUSINESS',
-      coreSubtitle: '问题定义 / 业务约束',
+      eyebrow: 'PRODUCT OPERATING MODEL',
+      version: 'V.02',
+      coreTitle: 'VALUE',
+      coreSubtitle: '业务问题 / 产品价值',
       layers: [
-        { index: '01', code: 'ARCHITECTURE', label: '可靠系统' },
-        { index: '02', code: 'DELIVERY', label: '团队交付' },
-        { index: '03', code: 'AI APPLICATION', label: '场景落地' },
+        { index: '01', code: 'DISCOVER', label: '需求与产品' },
+        { index: '02', code: 'DELIVER', label: '研发与质量' },
+        { index: '03', code: 'OPERATE', label: '运营与演进' },
       ],
-      footer: 'SYSTEMS THINKING · HUMAN JUDGMENT',
+      footer: 'HUMAN JUDGMENT · AI COLLABORATION · EVIDENCE',
     },
   },
   about: {
-    statementBefore: '我关注的不只是架构图，',
+    statementBefore: '我关注的不只是代码，',
     statementBridge: '而是',
-    statementAccent: '业务、系统与团队',
+    statementAccent: '业务、产品与 AI',
     statementAfter: '能否一起持续交付。',
     skillsEyebrow: 'Tools are not the story',
     skillsTitleLines: ['技术服务于问题，', '而不是反过来。'],
-    skillsDescription: '当前关注上海的技术负责人、研发总监、架构与工程岗位，也接受能够深入核心代码的全栈和后端方向。',
+    skillsDescription: '主方向为技术负责人 / 研发总监，也接受系统架构与全栈交付岗位；AI Native 研发负责人是围绕现有 AI 协同研发实践延伸的方向。',
   },
   footer: {
-    signature: '技术与业务之间，持续构建。',
+    signature: '业务、产品与工程之间，持续构建。',
   },
   projectVisual: {
     schematic: 'SCHEMATIC / NOT SCREENSHOT',
@@ -273,13 +364,17 @@ export const ui = {
     domain: 'DOMAIN',
     systemContext: 'System context',
     specsTitle: '项目规格',
-    evidenceNote: '本页将已确认事实与待补证据分开，不使用缺乏统计口径的规模或效果数字。',
+    evidenceNote: '以下事实与指标均注明适用范围；架构示意图用于说明系统结构与本人职责。',
     factsEyebrow: 'Verified facts',
     factsIndex: 'F / 01',
     factsTitle: '事实与口径',
     decisionsEyebrow: 'Key decisions',
-    decisionsIndex: 'D / 02',
+    decisionsIndex: 'D / 03',
     decisionsTitle: '关键决策',
+    capabilitiesEyebrow: 'Capability evidence',
+    capabilitiesIndex: 'C / 02',
+    capabilitiesTitle: '本案例证明的能力',
+    capabilitiesNote: '只关联本案例能够支撑的能力，不要求一个项目覆盖完整能力体系。',
   },
   notFound: {
     eyebrow: '404 / Off the map',

@@ -1,7 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import SectionHeading from './SectionHeading.astro';
-import { sections, ui } from '../data/site';
+import { capabilities, sections, ui } from '../data/site';
+
+const capabilityTitles = new Map(capabilities.map((item) => [item.id, item.title] as const));
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
@@ -26,7 +28,7 @@ const { projects } = Astro.props;
             aria-pressed={index === 0}
             aria-controls={`preview-${project.id}`}
           >
-            <span class="work-num">0{project.data.order}</span>
+            <span class="work-num">{String(index + 1).padStart(2, '0')}</span>
             <span class="work-text">
               <strong>{project.data.title}</strong>
               <span>{project.data.tagline}</span>
@@ -61,6 +63,12 @@ const { projects } = Astro.props;
               <div><dt>我的角色</dt><dd>{project.data.role}</dd></div>
             </dl>}
 
+            {project.data.capabilities.length > 0 && (
+              <ul class="preview-capabilities" role="list" aria-label="关联核心能力">
+                {project.data.capabilities.map((item) => <li>{capabilityTitles.get(item.id)}</li>)}
+              </ul>
+            )}
+
             {project.data.facts.length > 0 && (
               <div class="preview-facts">
                 {project.data.facts.slice(0, 2).map((fact) => (
@@ -77,6 +85,8 @@ const { projects } = Astro.props;
       ))}
     </div>
   </div>
+
+  <a class="all-work-link" href="/work/">查看全部项目与能力证据 <span aria-hidden="true">↗</span></a>
 </section>
 
 <style>
@@ -257,6 +267,35 @@ const { projects } = Astro.props;
   .preview-specs dd {
     color: var(--text-primary);
     overflow-wrap: anywhere;
+  }
+
+  .preview-capabilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .preview-capabilities li {
+    padding: 5px 8px;
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 11px;
+  }
+
+  .all-work-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  .all-work-link:hover {
+    color: var(--accent);
   }
 
   .preview-facts {

@@ -3,10 +3,16 @@ title: 天天动听
 tagline: 音乐平台的后端架构与播放服务
 summary: 天天动听为用户提供音乐播放服务。我负责后端整体架构与核心业务开发，工作覆盖用户数据管理、音乐资源调度和歌曲播放，并与前端、测试团队一起完成需求评估、方案评审与交付。
 order: 3
+featured: true
 period: 2013.08 — 2014.06（任职期间）
 role: 架构师
 domain: 音乐 / 音频播放 / 后端架构
 status: 音乐平台项目
+capabilities:
+  - id: architecture
+    evidence: 负责后端整体架构、技术路线与核心业务开发，覆盖用户数据、资源调度和播放服务。
+  - id: quality
+    evidence: 参与需求评估、设计评审和跨模块问题定位，与前端、测试团队共同推进交付。
 stack: [Java, Groovy, Spring, MySQL, MongoDB, Redis, RabbitMQ]
 ---
 

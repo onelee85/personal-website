@@ -1,6 +1,5 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { blogTagId } from '../../lib/blog-tags';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -29,9 +28,9 @@ const published = date.slice(0, 10);
     <div class="prose"><Content /></div>
     <footer>
       <ul class="tag-list" aria-label="文章标签">
-        {tags.map(tag => <li><a class="tag" href={`/blog/#${encodeURIComponent(blogTagId(tag))}`}>{tag}</a></li>)}
+        {tags.map(tag => <li class="tag">{tag}</li>)}
       </ul>
-      <a class="back" href="/blog/#tags">← 浏览全部标签</a>
+      <a class="back" href="/blog/">← 浏览全部文章</a>
     </footer>
   </article>
 </BaseLayout>

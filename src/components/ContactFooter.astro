@@ -24,6 +24,7 @@ const marquee = contact.marquee;
       </div>
       <strong>{contact.panelTitle}</strong>
       <p>{contact.note}</p>
+      <a class="resume-link" href="/resume/">查看 / 保存职业简历 <span aria-hidden="true">↗</span></a>
       <ul class="contact-channels" aria-label={contact.channelsAria}>
         {contact.channels.map((channel) => (
           <li>
@@ -127,6 +128,22 @@ const marquee = contact.marquee;
     margin-top: 12px;
     color: var(--text-secondary);
     font-size: 13px;
+  }
+
+  .resume-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .resume-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .contact-channels {
